@@ -1,0 +1,98 @@
+In order to find out the id of a node at a particular location
+for "gen4.py and gen5.py" run the
+command with 0 nodes and then open the graph with visidia to find out the 
+node id at the required location
+i.e. "python3 gen4.py 0 100 1000 1000"
+
+
+Line By Line simuation:
+After opening the graph file with visidia note the id the node from
+which the simulation needs to be started. In the code file
+for the corresponding algorithm (aroung line 30-35) under the comment
+"Node id for clone A'" set the value of "startId" to noted id. And then run the
+algorithm for 500*(Number of nodes) times.
+
+Overall Simuation
+Set the value of "startId" to 0. From the graph note the id of the last node
+and run the number of simulations for 500*(the last id)
+
+After obtaining the file with the simulation results
+run it thorough "sp.py" present in graph gen
+Example: ./sp.py filename
+The value mapped to zero corresponds to the start id
+
+
+
+
+
+
+
+gen1.py
+Used to generate rectangular graphs with randomly placed nodes
+
+Syntax : gen1.py <NumberOfNodes> <Transmission Range> <MaximumX> <MaximumY>
+Example Usage: python3 gen1.py 1000 100 1000 100 > graph.gml
+-----------------------
+
+
+gen2.py
+Generates graphs in which the nodes are placed on a unifrom grid
+
+Syntax: gen2.py <MaximumX> <MaximumY> <Grid Seperation>
+Example Usage: python3 gen2.py 1000 1000 100 > graph.gml
+-----------------------
+
+
+gen3.py
+Used to generate graphs in which no nodes should be present
+in certain sections of the graph specified by '.' in the '#.' diagram
+of the graph
+
+Syntax : gen3.py <NumberOfNodes> <Transmission Range> <MaximumX> <MaximumY>
+Example Usage: python3 gen3.py 1000 100 1000 1000 > graph.gml
+5 3
+###
+#..
+###
+..#
+###
+
+(((OR)))
+
+note the name of the desired shape from the shapes folder and use the command
+python3 gen3.py 1000 100 1000 1000 < shapes/S > graph.gml
+-----------------------
+
+
+gen4.py
+Generates graphs where the first few nodes are placed on a gird
+and the remaining nodes are randomly distributed
+
+Syntax : gen4.py <NumberOfNodes> <Transmission Range> <MaximumX> <MaximumY> <Grid Seperation>
+Example Usage: python3 gen4.py 1000 100 1000 1000 100 > graph.gml
+----------------------
+
+
+gen5.py
+Generates graphs similar to gen3.py but places the first few nodes
+on the points needed for evaluations and randomly distributes
+the rest of the points.
+
+Syntax : gen45.py <NumberOfNodes> <Transmission Range> <MaximumX> <MaximumY> <<Grid Seperation>
+Example Usage: python3 gen3.py 1000 100 1000 1000 100 > graph.gml
+5 3
+###
+#..
+###
+..#
+###
+
+(((OR )))
+
+similar to gen3.py note the name of the desired shape from the shapes folder and use the command
+python3 gen5.py 1000 100 1000 1000 100 < shapes/S > graph.gml
+
+Running any of the files without any arguments will output the syntax
+
+
+
