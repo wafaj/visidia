@@ -95,16 +95,25 @@ public class Routing extends SynchronousAlgorithm{
 		double minAngleValue =361;//Double.MAX_VALUE;//this.getDist(p,this.pos);
 		
 		int minDoor = -1;
-		System.out.println(this.getId()+" Self: dest :"+p.distance(this.vertex.getPos())+ " pos dest : "+
-				p.getX()+" "+p.getY()+"pos:"+this.vertex.getPos().getX()+" "+this.vertex.getPos().getY()+" ");
+		int srcDoor = -1;
+		for(int i = 0;i<neighborLocs.size();i++){
+			if(lastPosition.equals(neighborLocs.elementAt(i))){
+				srcDoor = i;
+				//minDist = this.getDist(p,neighborLocs.elementAt(i));	
+			}
+		}
+		System.out.println(this.getId()+" Self: dest :"+p.distance(this.vertex.getPos())+ " pos dest : "+p.getX()+" "+p.getY()+"pos:"+this.vertex.getPos().getX()+" "+this.vertex.getPos().getY()+" ");
 		for(int i = 0;i<neighborLocs.size();i++){
 			System.out.println(this.getId()+"pos neighbor:"+neighborLocs.elementAt(i).getX()+" "+neighborLocs.elementAt(i).getY()+" "+
-					"distance form dest :"+p.distance(neighborLocs.elementAt(i))
-								);
-			if( this.getDist(p,neighborLocs.elementAt(i))  < minDist ){
-				minDoor = i;
-				minDist = this.getDist(p,neighborLocs.elementAt(i));
+					"distance form dest :"+p.distance(neighborLocs.elementAt(i)));
+			if(i!=srcDoor){
+				if( this.getDist(p,neighborLocs.elementAt(i))  < minDist ){
+					minDoor = i;
+					minDist = this.getDist(p,neighborLocs.elementAt(i));
+				}
+				
 			}
+
 		}
 		if(minDist<p.distance(this.vertex.getPos())){
 			System.out.println("sent by using the Greedy Roting");
@@ -113,14 +122,9 @@ public class Routing extends SynchronousAlgorithm{
 
 		}
 		else{//Perimetre Routing
-			int srcDoor = -1;
+			
 			System.out.println("trying to send by using the Perimetre Routing");
-			for(int i = 0;i<neighborLocs.size();i++){
-				if(lastPosition.equals(neighborLocs.elementAt(i))){
-					srcDoor = i;
-					//minDist = this.getDist(p,neighborLocs.elementAt(i));	
-				}
-			}
+
 			
 			for(int i = 0;i<neighborLocs.size();i++){
 				if(i!=srcDoor){
