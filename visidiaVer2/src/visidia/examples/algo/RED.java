@@ -66,8 +66,14 @@ public class RED extends Routing{
 	private void receiveClaims(){
 		Door d = new Door();
 		while(this.anyMsg()){
+			
 			this.putProperty("label", "A");
 			SensorMessage msg = (SensorMessage)this.receive(d);	
+			System.out.println("####*"+msg);
+			for (int i = 0; i < claims.size(); i++) {
+				System.out.println(claims.get(i));
+				
+			}
 			System.out.println(this.getId()+" Receive "+msg);
 			msg.setLastPos(this.vertex.getNeighborByDoor(d.getNum()).getPos());
 			System.out.println("mise à jour de LastPos "+this.vertex.getNeighborByDoor(d.getNum()).getPos()+"avec le numero du port " +d.getNum());
@@ -82,9 +88,18 @@ public class RED extends Routing{
 		while(this.anyMsg()){
 			this.putProperty("label", "T");
 			SensorMessage msg = (SensorMessage)this.receive(d);	
+			System.out.println("####"+claims.size()+" "+msg);
+			boolean msgExist=false;
+			for (int i = 0; i < claims.size(); i++) {
+				System.out.println(((SensorMessage)claims.get(i)).toString());
+				if(msg.toString().equals(((SensorMessage)claims.get(i)).toString())){
+					msgExist=true;
+					
+				}
+			}
 			System.out.println(this.getId()+" Receive "+msg);
 			msg.setLastPos(this.vertex.getNeighborByDoor(d.getNum()).getPos());
-			System.out.println("mise à jour de LastPos "+this.vertex.getNeighborByDoor(d.getNum()).getPos()+"avec le numero du port " +d.getNum());
+			//System.out.println("mise à jour de LastPos "+this.vertex.getNeighborByDoor(d.getNum()).getPos()+"avec le numero du port " +d.getNum());
 
 			claims.addElement(msg);
 			if(store){
@@ -154,7 +169,7 @@ public class RED extends Routing{
 		this.setUpRouting();
 		this.clearWitnessPoints();
 		//--Uncomment to randomly generate compromised and cloned nodes
-		this.compromise(5); //compromise(x) x-> percentage of compromised nodes and cloning nodes !!!!
+		this.compromise(0); //compromise(x) x-> percentage of compromised nodes and cloning nodes !!!!###
 		this.nextPulse();
 
 		String label = this.getProperty("label").toString();

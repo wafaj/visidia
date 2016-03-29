@@ -111,7 +111,6 @@ public class Routing extends SynchronousAlgorithm{
 					minDoor = i;
 					minDist = this.getDist(p,neighborLocs.elementAt(i));
 				}
-				
 			}
 
 		}
@@ -122,7 +121,6 @@ public class Routing extends SynchronousAlgorithm{
 
 		}
 		else{//Perimetre Routing
-			
 			System.out.println("trying to send by using the Perimetre Routing");
 
 			
