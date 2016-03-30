@@ -102,10 +102,9 @@ public class Routing extends SynchronousAlgorithm{
 				//minDist = this.getDist(p,neighborLocs.elementAt(i));	
 			}
 		}
-		System.out.println(this.getId()+" Self: dest :"+p.distance(this.vertex.getPos())+ " pos dest : "+p.getX()+" "+p.getY()+"pos:"+this.vertex.getPos().getX()+" "+this.vertex.getPos().getY()+" ");
+		//System.out.println(this.getId()+" Self: dest :"+p.distance(this.vertex.getPos())+ " pos dest : "+p.getX()+" "+p.getY()+"pos:"+this.vertex.getPos().getX()+" "+this.vertex.getPos().getY()+" ");
 		for(int i = 0;i<neighborLocs.size();i++){
-			System.out.println(this.getId()+"pos neighbor:"+neighborLocs.elementAt(i).getX()+" "+neighborLocs.elementAt(i).getY()+" "+
-					"distance form dest :"+p.distance(neighborLocs.elementAt(i)));
+			//System.out.println(this.getId()+"pos neighbor:"+neighborLocs.elementAt(i).getX()+" "+neighborLocs.elementAt(i).getY()+" "+"distance form dest :"+p.distance(neighborLocs.elementAt(i)));
 			if(i!=srcDoor){
 				if( this.getDist(p,neighborLocs.elementAt(i))  < minDist ){
 					minDoor = i;
@@ -129,7 +128,7 @@ public class Routing extends SynchronousAlgorithm{
 					double currentAngle;
 					try {
 						currentAngle = angleBetweenTwoPointsWithFixedPoint(this.vertex.getPos(), neighborLocs.elementAt(srcDoor), neighborLocs.elementAt(i));
-						System.out.println(i+" : "+currentAngle);
+						//System.out.println(i+" : "+currentAngle);
 						if(minAngleValue>currentAngle){
 							minDoor = i;
 							minAngleValue=currentAngle;
@@ -154,17 +153,10 @@ public class Routing extends SynchronousAlgorithm{
 	 * @throws NullVectorExceotion 
 	 */
 	private Double angleBetweenTwoPointsWithFixedPoint(Point fixed, Point p1, Point p2) throws NullVectorExceotion {
-		System.out.println("["+fixed.getX()+","+fixed.getY()+"] et ["+p1.getX()+","+p1.getY()+"]");
 		double a1=angleVector(fixed,p1);
-		//System.out.println("a1="+a1+" est la mesure de l'angle ["+fixed.getX()+","+fixed.getY()+"] et ["+p1.getX()+","+p1.getY()+"]");
-		
-		System.out.println("["+fixed.getX()+","+fixed.getY()+"] et ["+p2.getX()+","+p2.getY()+"]");
 		double a2=angleVector(fixed,p2);
-		//System.out.println("a2="+a1+" est la mesure de l'angle ["+fixed.getX()+","+fixed.getY()+"] et ["+p2.getX()+","+p2.getY()+"]");
-
 		Double angle = null;
 		angle=a2-a1;
-		System.out.println("a2-a2="+angle);
 		if (angle>=0)angle=360-angle;
 		else if (angle<0)angle*=-1;
 		return angle;
@@ -217,7 +209,7 @@ public class Routing extends SynchronousAlgorithm{
 			SensorMessage msg = (SensorMessage)this.receive(d);
 			System.out.println(this.getId()+" Receive "+msg);
 			msg.setLastPos(this.vertex.getNeighborByDoor(d.getNum()).getPos());
-			System.out.println("mise à jour de LastPos "+this.vertex.getNeighborByDoor(d.getNum()).getPos()+"avec le numero du port " +d.getNum());
+			System.out.println("mise ï¿½ jour de LastPos "+this.vertex.getNeighborByDoor(d.getNum()).getPos()+"avec le numero du port " +d.getNum());
 			this.forwardMessage(msg.getDest(),msg);
 		}
 	}
