@@ -12,6 +12,7 @@ import visidia.graph.Graph;
 import visidia.graph.Vertex;
 import visidia.examples.algo.clone_solutions.NullVectorExceotion;
 import visidia.graph.Edge;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -36,6 +37,9 @@ public class Routing extends SynchronousAlgorithm{
 	protected double yPos;
 	private Point pos;
 	protected Vector<Point> neighborLocs;
+//	HashMap<String, Integer> cache = new HashMap<String, Integer>();
+	private HashMap<Integer, Vector> recivedMsg= new HashMap<Integer, Vector>();;
+
 
 	//Cordinates of the compromised region
 	protected static Double x1Compr = new Double((0000.0/3.0) - 1.0e-6);
@@ -350,6 +354,33 @@ public class Routing extends SynchronousAlgorithm{
 				connections[i][j] = false;
 			}
 		}
+	}
+	protected boolean isAlreadyReceived(SensorMessage msg, int numDoor) {
+		//Vector temp=recivedMsg.get(numDoor);
+		if(recivedMsg.get(numDoor)!=null){
+			if(recivedMsg.get(numDoor).contains(msg.toString()))
+				return true;
+			
+			else{
+				recivedMsg.get(numDoor).add(msg.toString());
+				return false;
+			}
+			
+		}else{
+			
+			recivedMsg.put(new Integer(numDoor),new Vector());
+			recivedMsg.get(numDoor).add(msg.toString());
+			return false;
+			
+			
+		}
+		
+		
+		
+		//if(recivedMsg.getValue(numDoor).indexOf(msg)==-1)
+//		if((recivedMsg[numDoor]).indexOf(msg)==-1)
+	//		return false;
+		//return true;
 	}
 
 	/* CAN BE USED FOR RANDOMISING POSITIONS OF NODES IN THE GRAPH

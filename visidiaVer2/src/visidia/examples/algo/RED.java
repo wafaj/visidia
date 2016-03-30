@@ -82,13 +82,19 @@ public class RED extends Routing{
 			SensorMessage msg = (SensorMessage)this.receive(d);	
 			System.out.println(this.getId()+" "+msg+" : "+d.getNum());
 			msg.setLastPos(this.vertex.getNeighborByDoor(d.getNum()).getPos());
-			claims.addElement(msg);
-			if(store){
-				cache.addClaim(msg.getLabel(),msg.getClaim());
+			if(!this.isAlreadyReceived(msg,d.getNum())){
+				claims.addElement(msg);
+				if(store){
+					cache.addClaim(msg.getLabel(),msg.getClaim());
 				}
+				
+			}
+			
 		}
 	}
 	
+	
+
 	private boolean shouldISend(){
 		double val = this.rand.nextDouble();
 		if( val > this.THRESHOLD ){
