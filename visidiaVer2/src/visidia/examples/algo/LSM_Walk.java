@@ -18,8 +18,8 @@ import java.util.Arrays;
 
 
 public class LSM_Walk extends Routing{
-	private WitnessCache cache;
-	private Vector<SensorMessage> claims;
+	//private WitnessCache cache;
+	//private Vector<SensorMessage> claims;
 	private boolean isMalacious;
 	private static Boolean receiving = true;
 	private static Vector<Point> WitnessPoints = new Vector<Point>();
@@ -45,7 +45,8 @@ public class LSM_Walk extends Routing{
 		}
 	}
 	
-	private void receiveClaims(){
+	/*
+	 * private void receiveClaims(){
 		Door d = new Door();
 		while(this.anyMsg()){
 			SensorMessage msg = (SensorMessage)this.receive(d);	
@@ -62,6 +63,7 @@ public class LSM_Walk extends Routing{
 			if(store){cache.addClaim(msg.getLabel(),msg.getClaim());}
 		}
 	}
+	 */
 	
 	private boolean shouldISend(){
 		double val = this.rand.nextDouble();

@@ -18,8 +18,8 @@ import java.util.Arrays;
 
 
 public class RED extends Routing{
-	private WitnessCache cache;
-	private Vector<SensorMessage> claims;
+	//private WitnessCache cache;
+	//private Vector<SensorMessage> claims;
 	private boolean isMalacious;
 	public static final int NoWitnessPoints = 1;
 	private static Boolean receiving = true;
@@ -63,36 +63,7 @@ public class RED extends Routing{
 		}
 	}
 	
-	private void receiveClaims(){
-		Door d = new Door();
-		while(this.anyMsg()){
-			
-			this.putProperty("label", "A");
-			SensorMessage msg = (SensorMessage)this.receive(d);	
-			msg.setLastPos(this.vertex.getNeighborByDoor(d.getNum()).getPos());
-			claims.addElement(msg);
-			cache.addClaim(msg.getLabel(),msg.getClaim());
-		}
-	}
 
-	private void receiveClaims(boolean store){
-		Door d = new Door();
-		while(this.anyMsg()){
-			this.putProperty("label", "T");
-			SensorMessage msg = (SensorMessage)this.receive(d);	
-			System.out.println(this.getId()+" "+msg+" : "+d.getNum());
-			msg.setLastPos(this.vertex.getNeighborByDoor(d.getNum()).getPos());
-			if(!this.isAlreadyReceived(msg,d.getNum())){
-				claims.addElement(msg);
-				if(store){
-					cache.addClaim(msg.getLabel(),msg.getClaim());
-				}
-				
-			}
-			
-		}
-	}
-	
 	
 
 	private boolean shouldISend(){

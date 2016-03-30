@@ -22,6 +22,8 @@ import java.awt.Point;
 import java.util.Enumeration;
 
 public class Routing extends SynchronousAlgorithm{
+	protected WitnessCache cache;
+	protected Vector<SensorMessage> claims;
 	public static final Double INF = new Double(1<<20);
 	protected static Double xMax = new Double(-INF);
 	protected static Double yMax = new Double(-INF);
@@ -147,6 +149,36 @@ public class Routing extends SynchronousAlgorithm{
 		}
 		return minDoor;
 	}
+	protected void receiveClaims(){
+		Door d = new Door();
+		while(this.anyMsg()){
+			
+			this.putProperty("label", "A");
+			SensorMessage msg = (SensorMessage)this.receive(d);	
+			msg.setLastPos(this.vertex.getNeighborByDoor(d.getNum()).getPos());
+			claims.addElement(msg);
+			cache.addClaim(msg.getLabel(),msg.getClaim());
+		}
+	}
+
+	protected void receiveClaims(boolean store){
+		Door d = new Door();
+		while(this.anyMsg()){
+			this.putProperty("label", "T");
+			SensorMessage msg = (SensorMessage)this.receive(d);	
+			System.out.println(this.getId()+" "+msg+" : "+d.getNum());
+			msg.setLastPos(this.vertex.getNeighborByDoor(d.getNum()).getPos());
+			if(!this.isAlreadyReceived(msg,d.getNum())){
+				claims.addElement(msg);
+				if(store){
+					cache.addClaim(msg.getLabel(),msg.getClaim());
+				}
+				
+			}
+			
+		}
+	}
+	
 
 	/**
 	 * 
