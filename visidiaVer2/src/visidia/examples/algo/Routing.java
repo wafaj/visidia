@@ -102,6 +102,8 @@ public class Routing extends SynchronousAlgorithm{
 		
 		int minDoor = -1;
 		int srcDoor = -1;
+		if(p.distance(this.vertex.getPos())==0)
+				return -1;
 		for(int i = 0;i<neighborLocs.size();i++){
 			if(lastPosition.equals(neighborLocs.elementAt(i))){
 				srcDoor = i;
