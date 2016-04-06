@@ -122,13 +122,13 @@ public class Routing extends SynchronousAlgorithm{
 
 		}
 		if(minDist<p.distance(this.vertex.getPos())){
-			System.out.println("sent by using the Greedy Roting");
+			//System.out.println("sent by using the Greedy Roting");
 			//Greedy Roting
 			return minDoor;
 
 		}
 		else{//Perimetre Routing
-			System.out.println("trying to send by using the Perimetre Routing");
+			//System.out.println("trying to send by using the Perimetre Routing");
 
 			
 			for(int i = 0;i<neighborLocs.size();i++){
@@ -143,7 +143,7 @@ public class Routing extends SynchronousAlgorithm{
 						}
 					} catch (NullVectorExceotion e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						//e.printStackTrace();
 					}
 
 				}
@@ -168,7 +168,7 @@ public class Routing extends SynchronousAlgorithm{
 		while(this.anyMsg()){
 			this.putProperty("label", "T");
 			SensorMessage msg = (SensorMessage)this.receive(d);	
-			System.out.println(this.getId()+" "+msg+" : "+d.getNum());
+			//System.out.println(this.getId()+" "+msg+" : "+d.getNum());
 			msg.setLastPos(this.vertex.getNeighborByDoor(d.getNum()).getPos());
 			if(!this.isAlreadyReceived(msg,d.getNum())){
 				claims.addElement(msg);
@@ -233,7 +233,7 @@ public class Routing extends SynchronousAlgorithm{
 	protected boolean forwardMessage(Point p,Message msg){
 		Point lastPosition=((SensorMessage)msg).getLastPos();
 		if(lastPosition==null)
-			System.out.println("lastPosition est null");
+			;//System.out.println("lastPosition est null");
 		//int dest = this.getClosestDoor(p);
 		int dest = this.getClosestDoor(p,lastPosition);
 		if(dest == -1) return false;
@@ -245,9 +245,9 @@ public class Routing extends SynchronousAlgorithm{
 		Door d = new Door();
 		while(this.anyMsg()){
 			SensorMessage msg = (SensorMessage)this.receive(d);
-			System.out.println(this.getId()+" Receive "+msg);
+			//System.out.println(this.getId()+" Receive "+msg);
 			msg.setLastPos(this.vertex.getNeighborByDoor(d.getNum()).getPos());
-			System.out.println("mise � jour de LastPos "+this.vertex.getNeighborByDoor(d.getNum()).getPos()+"avec le numero du port " +d.getNum());
+			//System.out.println("mise � jour de LastPos "+this.vertex.getNeighborByDoor(d.getNum()).getPos()+"avec le numero du port " +d.getNum());
 			this.forwardMessage(msg.getDest(),msg);
 		}
 	}
