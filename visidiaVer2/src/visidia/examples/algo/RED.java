@@ -18,8 +18,7 @@ import java.util.Arrays;
 
 
 public class RED extends Routing{
-	//private WitnessCache cache;
-	//private Vector<SensorMessage> claims;
+
 	private boolean isMalacious;
 	public static final int NoWitnessPoints = 1;
 	private static Boolean receiving = true;
@@ -58,14 +57,12 @@ public class RED extends Routing{
 		String label = this.getProperty("label").toString();
 		// Dest Point(-1,-1) is used for broadcast
 		if(!label.equals(new String("N")) && !label.equals(new String("L")) && !label.equals(new String("M")) ){
-			System.out.println(this.getId()+" _broadcastLoc");
 			this.sendAll(new SensorMessage(label,new Point(-1,-1),this.getPosition()));
 		}
 	}
 	
-
 	
-
+	
 	private boolean shouldISend(){
 		double val = this.rand.nextDouble();
 		if( val > this.THRESHOLD ){
@@ -76,16 +73,10 @@ public class RED extends Routing{
 	}
 
 	private void transmitClaims(){
-
-		
-		if(this.isMalacious && this.dropLocationClaims){
-			System.out.println(this.getId()+" _transmitClaims Fail");
-			return;
-		}
+		if(this.isMalacious && this.dropLocationClaims) return;
 		synchronized(WitnessPoints){
 			for(SensorMessage msg : this.claims){
 				if(this.shouldISend()){
-					System.out.println(this.getId()+" _transmitClaims ");
 					for(Point dest: this.WitnessPoints){
 						msg.setDest(dest);
 						//System.out.println(dest);
@@ -127,7 +118,7 @@ public class RED extends Routing{
 		this.setUpRouting();
 		this.clearWitnessPoints();
 		//--Uncomment to randomly generate compromised and cloned nodes
-		this.compromise(0); //compromise(x) x-> percentage of compromised nodes and cloning nodes !!!!###
+		this.compromise(0); //compromise(x) x-> percentage of compromised nodes and cloning nodes !!!!
 		this.nextPulse();
 
 		String label = this.getProperty("label").toString();
@@ -175,7 +166,9 @@ public class RED extends Routing{
 			}
 		}
 		//--Uncomment to randomly generate compromised and cloned nodes
-		this.unCompromise();
+		//this.unCompromise();
+		this.nextPulse();
+		System.out.println(this.getId()+" "+this.cache.size());
 		this.nextPulse();
 
 	}

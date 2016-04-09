@@ -51,4 +51,7 @@ public class WitnessCache{
 	public Vector<String> getClones(){
 		return new Vector<String>(clonedLabels);
 	}
+	public int size() {
+		return cache.size();
+	}
 };

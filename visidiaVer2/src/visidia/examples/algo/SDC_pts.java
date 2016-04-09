@@ -21,8 +21,8 @@ import java.util.TreeSet;
 
 
 public class SDC_pts extends Routing{
-	//private WitnessCache cache;
-	//private Vector<SensorMessage> claims;
+	private WitnessCache cache;
+	private Vector<SensorMessage> claims;
 	private boolean isMalacious;
 	public static final int NoWitnessPoints = 1;
 	private static Boolean receiving = true;
@@ -104,25 +104,7 @@ public class SDC_pts extends Routing{
 		}
 	}
 	
-	/*
-	 * private void receiveClaims(){
-		Door d = new Door();
-		while(this.anyMsg()){
-			SensorMessage msg = (SensorMessage)this.receive(d);	
-			claims.addElement(msg);
-			cache.addClaim(msg.getLabel(),msg.getClaim());
-		}
-	}
-
-	private void receiveClaims(boolean store){
-		Door d = new Door();
-		while(this.anyMsg()){
-			SensorMessage msg = (SensorMessage)this.receive(d);	
-			claims.addElement(msg);
-			if(store){cache.addClaim(msg.getLabel(),msg.getClaim());}
-		}
-	}
-	 */
+	
 	
 	private boolean shouldISend(){
 		double val = this.rand.nextDouble();

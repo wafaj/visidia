@@ -1,18 +1,23 @@
 package visidia.examples.algo;
 
+import java.awt.List;
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Random;
+
 import visidia.simulation.process.messages.Message;
 import visidia.simulation.process.messages.MessageType;
 
 public class SensorMessage extends Message {
-	
+
 	private String data;
 	private Point dest;
+	private Point lastNodePosition;
+	private ArrayList<Integer> path= new ArrayList<Integer>();
 	private Point locationClaim;
 	private Integer walkCounter;
 	private Integer UID;
-	private Point lastPos;
+	
 	private static Random r = new Random();
 
 	public Point getDest(){
@@ -50,6 +55,8 @@ public class SensorMessage extends Message {
 	}
 	
 	public SensorMessage(SensorMessage msg){
+		this.lastNodePosition=msg.lastNodePosition;
+		this.path=msg.path;
 		this.data = new String(msg.data);
 		this.dest = new Point(msg.dest);
 		this.locationClaim = new Point(msg.locationClaim);
@@ -84,7 +91,42 @@ public class SensorMessage extends Message {
 	public void decCounter(){
 		this.walkCounter -= 1;
 	}
+	public boolean detectInfiniteLoops(){
+		int pathLength=this.path.size();
+		String s="";for (int i = 0; i < pathLength; i++) {s+=path.get(i);	s+=" ";	}////System.out.println("pathLength="+pathLength+"path.size()"+path.size()+"   "+s);
 
+		////System.out.println("detectInfiniteLoops "+this.path.size());
+		if(pathLength<4){
+			////System.out.println("xxxx"+this.path.size());
+		}
+		else{
+			for (int i = pathLength-2; i >0 ; i--);
+				////System.out.println("path.get("+i+")="+path.get(i));
+			for (int i = pathLength-2; i >0 ; i--) {
+				//////System.out.println(path.get(pathLength-1)+"  "+(path.get(i)));
+				if(path.get(pathLength-1).equals(path.get(i))){
+					//System.out.println(path.get(pathLength-1)+"=="+(path.get(i)));
+					//////System.out.println("compare "+path.get(pathLength-2)+"  "+(path.get(i-1)));
+					if(path.get(pathLength-2).equals(path.get(i-1))){
+						////System.out.println("	"+path.get(pathLength-2)+"=="+(path.get(i-1)));
+						return true;	
+					}
+					else{
+						////System.out.println(path.get(pathLength-2)+"=/="+(path.get(i-1)));
+
+					}
+					
+				}
+				else{
+					////System.out.println(path.get(pathLength-1)+"=/="+(path.get(i)));
+				}
+				
+			}
+		}
+
+		
+		return false;
+	}
 	@Override
 	public Object clone() {
 		return new SensorMessage(this.data,this.dest,this.locationClaim,this.getType(),this.walkCounter);
@@ -100,12 +142,39 @@ public class SensorMessage extends Message {
 		else return String.valueOf(this.UID);
 	}
 
-	public Point getLastPos() {
-		return lastPos;
+	public Point getLastNodePosition() {
+		return lastNodePosition;
 	}
 
-	public void setLastPos(Point lastPos) {
-		this.lastPos =new Point( lastPos);
+	public void setLastNodePosition(Point lastNodePosition) {
+		this.lastNodePosition = lastNodePosition;
+	}
+
+	public ArrayList<Integer> getPath() {
+		return path;
+	}
+
+	public void setPath(ArrayList<Integer> path) {
+		this.path = path;
+	}
+
+	public void addNumIntoPath(int id) {
+		Integer ii=new Integer(id);
+		
+		if(path.add(ii)){
+			////System.out.println("addNumIntoPath "+ id);
+			
+		}else{
+			////System.out.println("addNumIntoPath "+ id+ "failure ");
+		}
+		String s="";
+		for (int i = 0; i < path.size(); i++) {
+			s+=path.get(i);
+			s+=" ";
+		}
+		//////System.out.println("path.size()"+path.size()+"   "+s);
+
+		
 	}
 
 }
