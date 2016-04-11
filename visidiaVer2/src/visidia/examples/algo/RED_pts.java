@@ -1,11 +1,13 @@
 package visidia.examples.algo;
 
+import visidia.simulation.Console;
 import visidia.simulation.process.algorithm.Algorithm;
 import visidia.simulation.process.algorithm.SynchronousAlgorithm;
 import visidia.simulation.process.edgestate.MarkedState;
 import visidia.simulation.process.messages.IntegerMessage;
 import visidia.simulation.process.messages.StringMessage;
 import visidia.simulation.process.messages.VectorMessage;
+import visidia.stats.Statistics;
 import visidia.simulation.process.messages.Message;
 import visidia.simulation.process.messages.Door;
 import java.util.HashMap;
@@ -139,6 +141,12 @@ public class RED_pts extends Routing{
 
 		// Step 0
 		this.fixWitnessPoints();
+		if(this.getId()==1)
+			for (int i = 0; i < WitnessPoints.size(); i++) {
+				;//System.out.println("Wtiness point position "+ i+" : "+(WitnessPoints.get(i)).getX()+" "+(WitnessPoints.get(i)).getY());
+				
+			}
+	
 		this.nextPulse();
 
 		//Step 1
@@ -175,7 +183,39 @@ public class RED_pts extends Routing{
 			}
 		}
 		this.nextPulse();
+		//levelTrace.hello(this.getId());
+		levelTrace.update(this);
+		this.nextPulse();
+		if(this.getId()==1){
+			Statistics stats = null;
 
+			Console console=this.proc.getServer().getConsole();
+			if (console == null) {
+				System.out.println("console null");
+			}
+			else{
+				System.out.println("console not null");
+				stats = console.getStats();	
+				if(stats==null){
+					;//System.out.println("	stat null");
+				}
+				else{
+					;//System.out.println("	stat  not null");
+					//System.out.println(stats.toString());
+					//for (int i = 0; i < stats.asHashTable().size(); i++) {
+						//System.out.println(stats.asHashTable().get(iterationNumber));
+						
+//					}
+				}
+			}
+				//if (simulationId > 1) stats = console.getStats();
+			
+		}
+			//levelTrace.setNb_Messages(this.gets
+			this.proc.getServer().getConsole();
+			levelTrace.show();
+			this.nextPulse();
+		
 	}
 }
 /*

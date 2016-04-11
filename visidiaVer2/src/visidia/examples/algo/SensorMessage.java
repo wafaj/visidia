@@ -93,7 +93,7 @@ public class SensorMessage extends Message {
 	}
 	public boolean detectInfiniteLoops(){
 		int pathLength=this.path.size();
-		String s="";for (int i = 0; i < pathLength; i++) {s+=path.get(i);	s+=" ";	}////System.out.println("pathLength="+pathLength+"path.size()"+path.size()+"   "+s);
+		//String s="";for (int i = 0; i < pathLength; i++) {s+=path.get(i);	s+=" ";	} System.out.println("pathLength="+pathLength+"path.size()"+path.size()+"   "+s);
 
 		////System.out.println("detectInfiniteLoops "+this.path.size());
 		if(pathLength<4){

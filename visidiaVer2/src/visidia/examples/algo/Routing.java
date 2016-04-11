@@ -39,6 +39,9 @@ public class Routing extends SynchronousAlgorithm {
 
 	protected WitnessCache cache;
 	protected Vector<SensorMessage> claims;
+	
+	
+	protected static LevelTrace levelTrace=  new LevelTrace();
 
 	// Cordinates of the compromised region
 	protected static Double x1Compr = new Double((0000.0 / 3.0) - 1.0e-6);
@@ -132,7 +135,7 @@ public class Routing extends SynchronousAlgorithm {
 			return minDoor;
 		} else {// failure Greedy Routing
 				// trying Perimeter Routing (GPSR)
-				// --> lastNode position
+				// -->we need a  lastNode position
 
 			if (srcDoor == -1) {
 				return srcDoor;
@@ -437,6 +440,22 @@ public class Routing extends SynchronousAlgorithm {
 				cache.addClaim(msg.getLabel(), msg.getClaim());
 			}
 		}
+	}
+
+	public WitnessCache getCache() {
+		return cache;
+	}
+
+	public void setCache(WitnessCache cache) {
+		this.cache = cache;
+	}
+
+	public Vector<SensorMessage> getClaims() {
+		return claims;
+	}
+
+	public void setClaims(Vector<SensorMessage> claims) {
+		this.claims = claims;
 	}
 
 	/*
