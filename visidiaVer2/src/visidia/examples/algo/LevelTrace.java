@@ -68,6 +68,10 @@ public class LevelTrace implements Serializable{
 		System.out.println("hello "+id);
 		
 	}
+	public void incrementNbMessage(int nbMessage) {
+		this.Nb_Messages+=nbMessage;
+		
+	}
 
 
 }

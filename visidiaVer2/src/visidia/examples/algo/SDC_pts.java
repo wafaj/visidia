@@ -100,6 +100,9 @@ public class SDC_pts extends Routing{
 		// Dest Point(-1,-1) is used for broadcast
 		//if(!label.equals(new String("N")) && !label.equals(new String("L")) && !label.equals(new String("M")) ){
 		if(label.equals(new String("P"))){
+			synchronized (levelTrace) {
+				this.levelTrace.incrementNbMessage(this.getArity());
+			}
 			this.sendAll(new SensorMessage(label,new Point(-1,-1),this.getPosition()));
 		}
 	}
@@ -235,6 +238,7 @@ public class SDC_pts extends Routing{
 		}
 		//--Uncomment to randomly generate compromised and cloned nodes
 		this.nextPulse();
+		statisticsProc();
 
 	}
 }

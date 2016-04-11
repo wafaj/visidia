@@ -44,6 +44,9 @@ public class LSM_pts extends Routing{
 		String label = this.getProperty("label").toString();
 		// Dest Point(-1,-1) is used for broadcast
 		if(!label.equals(new String("N")) && !label.equals(new String("L")) && !label.equals(new String("M")) ){
+			synchronized (levelTrace) {
+				this.levelTrace.incrementNbMessage(this.getArity());
+			}
 			this.sendAll(new SensorMessage(label,new Point(-1,-1),this.getPosition()));
 		}
 	}
@@ -155,6 +158,7 @@ public class LSM_pts extends Routing{
 			}
 		}
 		this.nextPulse();
+		statisticsProc();
 
 	}
 }

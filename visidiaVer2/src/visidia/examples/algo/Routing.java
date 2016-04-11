@@ -224,6 +224,10 @@ public class Routing extends SynchronousAlgorithm {
 		if (dest == -1)
 			return false;
 		else{
+			synchronized (levelTrace) {
+				this.levelTrace.incrementNbMessage(1);
+			}
+			
 			boolean detectInfiniteLoops=((SensorMessage) msg).detectInfiniteLoops();
 			if(detectInfiniteLoops){
 				return false;
@@ -456,6 +460,21 @@ public class Routing extends SynchronousAlgorithm {
 
 	public void setClaims(Vector<SensorMessage> claims) {
 		this.claims = claims;
+	}
+	protected void statisticsProc() {		
+		// levelTrace.hello(this.getId());
+		synchronized (levelTrace) {
+			levelTrace.update(this);
+		}
+
+		this.nextPulse();
+
+		if (this.getId() == 1) {
+			levelTrace.show();
+		}
+		this.nextPulse();
+
+		
 	}
 
 	/*
