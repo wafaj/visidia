@@ -21,8 +21,8 @@ import java.util.TreeSet;
 
 
 public class SDC_pts extends Routing{
-	private WitnessCache cache;
-	private Vector<SensorMessage> claims;
+	//private WitnessCache cache;
+	//private Vector<SensorMessage> claims;
 	private boolean isMalacious;
 	public static final int NoWitnessPoints = 1;
 	private static Boolean receiving = true;
@@ -170,8 +170,15 @@ public class SDC_pts extends Routing{
 	@Override
 	public void init(){
                 // the 4 following lines for the version of SDC with points evluation
-		if(this.iterationNumber/500 + startId == this.getId() || this.getId() == cloneA){
+		if(this.iterationNumber/100 + startId == this.getId() || this.getId() == cloneA){
+			if(this.iterationNumber/100 + startId == this.getId() ){
+				posA=this.vertex.getPos();
+			}
+			if(this.getId() == cloneA){	
+				posCloneA=new Point(this.vertex.getPos());
+			}
 			this.putProperty("label", new String("P"));
+			//System.out.println(this.getId()+" "+this.vertex.getPos().getX()+" "+this.vertex.getPos().getY());
 		}else{
 			this.putProperty("label", new String("N"));
 		}
@@ -238,7 +245,7 @@ public class SDC_pts extends Routing{
 		}
 		//--Uncomment to randomly generate compromised and cloned nodes
 		this.nextPulse();
-		statisticsProc();
+		statisticsProc(iterationNumber,cloneDetected,this.iterationNumber/100 + startId ,(int)cloneA,posA,posCloneA);
 
 	}
 }

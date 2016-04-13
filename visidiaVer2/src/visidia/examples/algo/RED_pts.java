@@ -21,6 +21,7 @@ import java.util.Arrays;
 public class RED_pts extends Routing {
 
 	private boolean isMalacious;
+
 	public static final int NoWitnessPoints = 1;
 	private static Boolean receiving = true;
 	private static Vector<Point> WitnessPoints = new Vector<Point>();
@@ -34,7 +35,7 @@ public class RED_pts extends Routing {
 	// Node ID of clone A
 	private static Integer cloneA = new Integer(0);
 	// Starting node id for clone A'
-	private static Integer startId = new Integer(55);
+	private static Integer startId = new Integer(1);
 
 	@Override
 	public Object clone() {
@@ -117,7 +118,14 @@ public class RED_pts extends Routing {
 	@Override
 	public void init() {
 		// the 4 following lines for the version of RED with points evluation
-		if (this.iterationNumber / 500 + startId == this.getId() || this.getId() == cloneA) {
+		if (this.iterationNumber/100 + startId == this.getId() || this.getId() == cloneA) {
+			if(this.iterationNumber/100 + startId == this.getId() ){
+				posA=this.vertex.getPos();
+			}
+			if(this.getId() == cloneA){	
+				posCloneA=new Point(this.vertex.getPos());
+			}
+			//System.out.println(this.getId()+" "+(int)this.vertex.getPos().getX()+" "+(int)this.vertex.getPos().getY());
 			this.putProperty("label", new String("P"));
 		} else {
 			this.putProperty("label", new String("N"));
@@ -187,6 +195,7 @@ public class RED_pts extends Routing {
 					System.out.println(String.valueOf(iterationNumber) + " " + "detected");
 					cloneDetected = true;
 				}
+				//else System.out.println(String.valueOf(iterationNumber) + " " + "NotDetected");
 			}
 		}
 		/**
@@ -215,11 +224,14 @@ public class RED_pts extends Routing {
 		this.proc.getServer().getConsole();
 		 */
 		this.nextPulse();
-		statisticsProc();
+		
+	
+		//System.out.println(String.valueOf(iterationNumber) + " " + "detected");
+		statisticsProc(iterationNumber,cloneDetected,this.iterationNumber/100 + startId ,(int)cloneA,posA,posCloneA);
 
 	}
 
-
+	
 }
 /*
  * Step 0 - Fix some set of locations -- so this using static member type Step 1

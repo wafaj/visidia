@@ -21,6 +21,8 @@ import java.awt.Point;
 import java.util.Enumeration;
 
 public class Routing extends SynchronousAlgorithm {
+	protected Point posA;
+	protected Point posCloneA;
 	public static final Double INF = new Double(1 << 20);
 	protected static Double xMax = new Double(-INF);
 	protected static Double yMax = new Double(-INF);
@@ -461,19 +463,22 @@ public class Routing extends SynchronousAlgorithm {
 	public void setClaims(Vector<SensorMessage> claims) {
 		this.claims = claims;
 	}
-	protected void statisticsProc() {		
-		// levelTrace.hello(this.getId());
+	protected void statisticsProc(Integer iterationNumber, Boolean cloneDetected, int idA, int  idCloneA,Point posA,Point posCloneA) {	
+		//System.out.println( "statisticsProc"+iterationNumber+" "+ cloneDetected+" "+ idA+" "+idCloneA+" "+posA+" "+posCloneA);
 		synchronized (levelTrace) {
-			levelTrace.update(this);
+			levelTrace.update(this,idA,idCloneA,posA,posCloneA);
 		}
-
 		this.nextPulse();
 
 		if (this.getId() == 1) {
-			levelTrace.show();
+			levelTrace.show(iterationNumber,cloneDetected);
+			this.nextPulse();
+			//levelTrace.saveToFile(true);
+			levelTrace.initialize();
 		}
 		this.nextPulse();
-
+		
+		
 		
 	}
 

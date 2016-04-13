@@ -168,8 +168,7 @@ public class RED extends Routing{
 		//--Uncomment to randomly generate compromised and cloned nodes
 		//this.unCompromise();
 		this.nextPulse();
-		System.out.println(this.getId()+" "+this.cache.size());
-		this.nextPulse();
+		
 
 	}
 }

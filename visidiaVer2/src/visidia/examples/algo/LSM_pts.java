@@ -31,7 +31,7 @@ public class LSM_pts extends Routing{
 	//Node ID for clone A
 	private static Integer cloneA = new Integer(28);
 	//Starting node id for clone A'
-	private static Integer startId = new Integer(23);
+	private static Integer startId = new Integer(1);
 
 
 	@Override
@@ -97,7 +97,14 @@ public class LSM_pts extends Routing{
 
 
                 // the 4 following lines for the version of LSM with points evluation
-		if(this.iterationNumber/500 + startId == this.getId() || this.getId() == cloneA){
+		if(this.iterationNumber/100 + startId == this.getId() || this.getId() == cloneA){
+			if(this.iterationNumber/100 + startId == this.getId() ){
+				posA=this.vertex.getPos();
+			}
+			if(this.getId() == cloneA){	
+				posCloneA=new Point(this.vertex.getPos());
+			}
+			System.out.println(this.getId()+" "+this.vertex.getPos().getX()+" "+this.vertex.getPos().getY());
 			this.putProperty("label", new String("P"));
 		}else{
 			this.putProperty("label", new String("N"));
@@ -158,7 +165,7 @@ public class LSM_pts extends Routing{
 			}
 		}
 		this.nextPulse();
-		statisticsProc();
+		statisticsProc(iterationNumber,cloneDetected,this.iterationNumber/100 + startId ,(int)cloneA,posA,posCloneA);
 
 	}
 }
