@@ -18,9 +18,15 @@ import java.util.Vector;
 import java.awt.Color;
 import java.util.Random;
 import java.awt.Point;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Enumeration;
 
 public class Routing extends SynchronousAlgorithm {
+
 	protected Point posA;
 	protected Point posCloneA;
 	public static final Double INF = new Double(1 << 20);
@@ -41,9 +47,8 @@ public class Routing extends SynchronousAlgorithm {
 
 	protected WitnessCache cache;
 	protected Vector<SensorMessage> claims;
-	
-	
-	protected static LevelTrace levelTrace=  new LevelTrace();
+
+	protected static LevelTrace levelTrace = new LevelTrace();
 
 	// Cordinates of the compromised region
 	protected static Double x1Compr = new Double((0000.0 / 3.0) - 1.0e-6);
@@ -66,6 +71,11 @@ public class Routing extends SynchronousAlgorithm {
 	@Override
 	public Object clone() {
 		return new Routing();
+	}
+
+	private static String realTimeDirectoryName() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private void updateGraphSize() {
@@ -91,13 +101,11 @@ public class Routing extends SynchronousAlgorithm {
 
 		double xRand = this.xMin + (this.xMax - this.xMin) * rand.nextDouble();
 		double yRand = this.yMin + (this.yMax - this.yMin) * rand.nextDouble();
-		return new Point((((int) xRand) / 2) * 2 + 1,
-				(((int) yRand) / 2) * 2 + 1);
+		return new Point((((int) xRand) / 2) * 2 + 1, (((int) yRand) / 2) * 2 + 1);
 	}
 
 	protected double getDist(Point p1, Point p2) {
-		return Math.sqrt((Math.pow((p1.getX() - p2.getX()), 2) + Math.pow(
-				(p1.getY() - p2.getY()), 2)));
+		return Math.sqrt((Math.pow((p1.getX() - p2.getX()), 2) + Math.pow((p1.getY() - p2.getY()), 2)));
 	}
 
 	protected int getClosestDoor(Point p, Point lastNodePosition) {
@@ -106,11 +114,11 @@ public class Routing extends SynchronousAlgorithm {
 
 		int minDoor = -1;
 		int srcDoor = -1;
-		//System.out.println(this.getId() +"\n"+
-			//	lastNodePosition.getX() +" "+lastNodePosition.getY() +"\n"+
-				//this.vertex.getPos().getX() +" "+this.vertex.getPos().getY() +"\n"+
-				//p.getX() +" "+p.getY() +"\n"+
-				//"\n");
+		// System.out.println(this.getId() +"\n"+
+		// lastNodePosition.getX() +" "+lastNodePosition.getY() +"\n"+
+		// this.vertex.getPos().getX() +" "+this.vertex.getPos().getY() +"\n"+
+		// p.getX() +" "+p.getY() +"\n"+
+		// "\n");
 		if (p.distance(this.vertex.getPos()) == 0)// stop routing if the message
 													// arrived
 			return -1;
@@ -137,7 +145,7 @@ public class Routing extends SynchronousAlgorithm {
 			return minDoor;
 		} else {// failure Greedy Routing
 				// trying Perimeter Routing (GPSR)
-				// -->we need a  lastNode position
+				// -->we need a lastNode position
 
 			if (srcDoor == -1) {
 				return srcDoor;
@@ -147,10 +155,8 @@ public class Routing extends SynchronousAlgorithm {
 						double currentAngle;
 						try {
 
-							currentAngle = angleBetweenTwoPointsWithFixedPoint(
-									this.vertex.getPos(),
-									neighborLocs.elementAt(srcDoor),
-									neighborLocs.elementAt(i));
+							currentAngle = angleBetweenTwoPointsWithFixedPoint(this.vertex.getPos(),
+									neighborLocs.elementAt(srcDoor), neighborLocs.elementAt(i));
 							// System.out.println(i+" : "+currentAngle);
 							if (minAngleValue > currentAngle) {
 								minDoor = i;
@@ -179,8 +185,7 @@ public class Routing extends SynchronousAlgorithm {
 	 * @return
 	 * @throws NullVectorExceotion
 	 */
-	private Double angleBetweenTwoPointsWithFixedPoint(Point fixed, Point p1,
-			Point p2) throws NullVectorExceotion {
+	private Double angleBetweenTwoPointsWithFixedPoint(Point fixed, Point p1, Point p2) throws NullVectorExceotion {
 		double a1 = angleVector(fixed, p1);
 		double a2 = angleVector(fixed, p2);
 		Double angle = null;
@@ -220,30 +225,27 @@ public class Routing extends SynchronousAlgorithm {
 	}
 
 	protected boolean forwardMessage(Point p, Message msg) {
-		
+
 		Point lastNodePosition = ((SensorMessage) msg).getLastNodePosition();
 		int dest = this.getClosestDoor(p, lastNodePosition);
 		if (dest == -1)
 			return false;
-		else{
+		else {
 			synchronized (levelTrace) {
 				this.levelTrace.incrementNbMessage(1);
 			}
-			
-			boolean detectInfiniteLoops=((SensorMessage) msg).detectInfiniteLoops();
-			if(detectInfiniteLoops){
+
+			boolean detectInfiniteLoops = ((SensorMessage) msg).detectInfiniteLoops();
+			if (detectInfiniteLoops) {
 				return false;
-			}
-			else{
+			} else {
 				((SensorMessage) msg).addNumIntoPath(this.getId());
 				this.sendTo(dest, new SensorMessage((SensorMessage) msg));
 				return true;
 			}
-			
-			
+
 		}
-			
-		
+
 	}
 
 	protected void checkInbox() {
@@ -260,20 +262,19 @@ public class Routing extends SynchronousAlgorithm {
 		int noOfNeighbors = this.getArity();
 		this.neighborLocs = new Vector<Point>();
 		for (int i = 0; i < noOfNeighbors; i++)
-			this.neighborLocs.addElement(this.vertex.getNeighborByDoor(i)
-					.getPos());
+			this.neighborLocs.addElement(this.vertex.getNeighborByDoor(i).getPos());
 	}
 
 	@Override
 	public void init() {
 		this.setUpRouting();
 		this.nextPulse();
-		if(this.getId()==0){
-			Point locationClaim=this.vertex.getPos();
-			Point dest=new Point(600,600);
-			SensorMessage msg=new SensorMessage("saber", dest, locationClaim);
-			this.forwardMessage(new Point(600,600),msg );
-			
+		if (this.getId() == 0) {
+			Point locationClaim = this.vertex.getPos();
+			Point dest = new Point(600, 600);
+			SensorMessage msg = new SensorMessage("saber", dest, locationClaim);
+			this.forwardMessage(new Point(600, 600), msg);
+
 		}
 		nextPulse();
 		while (true) {
@@ -340,8 +341,7 @@ public class Routing extends SynchronousAlgorithm {
 					Double vy = new Double(v.getPos().getY());
 					if (v.getLabel().toString().equals(new String("P")))
 						continue;
-					if (vx > x1Compr && vy > y1Compr && vx < x2Compr
-							&& vy < y2Compr) {
+					if (vx > x1Compr && vy > y1Compr && vx < x2Compr && vy < y2Compr) {
 						temp.addElement(i);
 					}
 				}
@@ -358,8 +358,7 @@ public class Routing extends SynchronousAlgorithm {
 						continue;
 					Double vx = new Double(v.getPos().getX());
 					Double vy = new Double(v.getPos().getY());
-					if (vx > x1Compr && vy > y1Compr && vx < x2Compr
-							&& vy < y2Compr) {
+					if (vx > x1Compr && vy > y1Compr && vx < x2Compr && vy < y2Compr) {
 						v.setLabel(new String("M"));
 						N -= 1;
 					}
@@ -377,17 +376,13 @@ public class Routing extends SynchronousAlgorithm {
 		Graph g = this.proc.getServer().getConsole().getGraph();
 		int C1, C2;
 		C1 = rand.nextInt(this.getNetSize());
-		while (!(g.getVertex(C1).getPos().getX() > x1Clone1
-				&& g.getVertex(C1).getPos().getX() < x2Clone1
-				&& g.getVertex(C1).getPos().getY() > y1Clone1 && g
-				.getVertex(C1).getPos().getY() < y2Clone1)) {
+		while (!(g.getVertex(C1).getPos().getX() > x1Clone1 && g.getVertex(C1).getPos().getX() < x2Clone1
+				&& g.getVertex(C1).getPos().getY() > y1Clone1 && g.getVertex(C1).getPos().getY() < y2Clone1)) {
 			C1 = rand.nextInt(this.getNetSize());
 		}
 		C2 = rand.nextInt(this.getNetSize());
-		while (!(g.getVertex(C2).getPos().getX() > x1Clone2
-				&& g.getVertex(C2).getPos().getX() < x2Clone2
-				&& g.getVertex(C2).getPos().getY() > y1Clone2 && g
-				.getVertex(C2).getPos().getY() < y2Clone2)) {
+		while (!(g.getVertex(C2).getPos().getX() > x1Clone2 && g.getVertex(C2).getPos().getX() < x2Clone2
+				&& g.getVertex(C2).getPos().getY() > y1Clone2 && g.getVertex(C2).getPos().getY() < y2Clone2)) {
 			C2 = rand.nextInt(this.getNetSize());
 			while (C1 == C2)
 				C2 = rand.nextInt(this.getNetSize());
@@ -428,8 +423,7 @@ public class Routing extends SynchronousAlgorithm {
 		Door d = new Door();
 		while (this.anyMsg()) {
 			SensorMessage msg = (SensorMessage) this.receive(d);
-			msg.setLastNodePosition((this.vertex.getNeighborByDoor(d.getNum()))
-					.getPos());
+			msg.setLastNodePosition((this.vertex.getNeighborByDoor(d.getNum())).getPos());
 			claims.addElement(msg);
 			cache.addClaim(msg.getLabel(), msg.getClaim());
 		}
@@ -439,8 +433,7 @@ public class Routing extends SynchronousAlgorithm {
 		Door d = new Door();
 		while (this.anyMsg()) {
 			SensorMessage msg = (SensorMessage) this.receive(d);
-			msg.setLastNodePosition((this.vertex.getNeighborByDoor(d.getNum()))
-					.getPos());
+			msg.setLastNodePosition((this.vertex.getNeighborByDoor(d.getNum())).getPos());
 			claims.addElement(msg);
 			if (store) {
 				cache.addClaim(msg.getLabel(), msg.getClaim());
@@ -463,24 +456,58 @@ public class Routing extends SynchronousAlgorithm {
 	public void setClaims(Vector<SensorMessage> claims) {
 		this.claims = claims;
 	}
-	protected void statisticsProc(Integer iterationNumber, Boolean cloneDetected, int idA, int  idCloneA,Point posA,Point posCloneA) {	
-		//System.out.println( "statisticsProc"+iterationNumber+" "+ cloneDetected+" "+ idA+" "+idCloneA+" "+posA+" "+posCloneA);
+
+	protected void statisticsProc(Integer iterationNumber, Boolean cloneDetected, int idA, int idCloneA, Point posA,
+			Point posCloneA) {
+		// System.out.println( "statisticsProc"+iterationNumber+" "+
+		// cloneDetected+" "+ idA+" "+idCloneA+" "+posA+" "+posCloneA);
 		synchronized (levelTrace) {
-			levelTrace.update(this,idA,idCloneA,posA,posCloneA);
+			levelTrace.update(this, idA, idCloneA, posA, posCloneA);
 		}
 		this.nextPulse();
 
 		if (this.getId() == 1) {
-			levelTrace.show(iterationNumber,cloneDetected);
+			String s = levelTrace.show(iterationNumber, cloneDetected);
+			//System.out.println(s);
+			saveTrace(s);
+
+
+			
+			try {
+				Thread.sleep(0);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			this.nextPulse();
-			//levelTrace.saveToFile(true);
+			// levelTrace.saveToFile(true);
 			levelTrace.initialize();
 		}
 		this.nextPulse();
-		
-		
-		
+
 	}
+
+	private void saveTrace(String s) {
+		BufferedWriter out =null;
+		try {
+			out = new BufferedWriter(new FileWriter(new File(this.getClass().getName()+this.getNetSize()+".txt"),true));
+			out.write(s+"\n");
+			
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally{
+			try {
+				out.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+		}			
+	}
+
 
 	/*
 	 * CAN BE USED FOR RANDOMISING POSITIONS OF NODES IN THE GRAPH public void
@@ -489,10 +516,10 @@ public class Routing extends SynchronousAlgorithm {
 	 * Vector<Edge>(); for(int i=0;i<this.getNetSize();i++){ Vertex v1 =
 	 * g.getVertex(i); for(int j=i+1;j<this.getNetSize();j++){ Vertex v2 =
 	 * g.getVertex(j); if( this.getDist(v1.getPos(),v2.getPos()) < proximity ){
-	 * /
-	 * /System.out.println("Linking "+String.valueOf(v1.getId())+" "+String.valueOf
-	 * (v2.getId())); addedEdges.addElement(v1.linkTo(v2,false)); } } }
-	 * graphBuilt = true; } } }
+	 * / /System.out.println("Linking "+String.valueOf(v1.getId())+" "
+	 * +String.valueOf (v2.getId()));
+	 * addedEdges.addElement(v1.linkTo(v2,false)); } } } graphBuilt = true; } }
+	 * }
 	 * 
 	 * public void destroyGraph(){ synchronized(graphBuilt){ if(graphBuilt){
 	 * for(int i=0;i<addedEdges.size();i++){ if( addedEdges.elementAt(i) !=

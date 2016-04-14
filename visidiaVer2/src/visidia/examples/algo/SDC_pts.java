@@ -238,7 +238,7 @@ public class SDC_pts extends Routing{
 			this.putProperty("label", new String("L"));
 			synchronized(cloneDetected){
 				if(!cloneDetected){
-					System.out.println(String.valueOf(iterationNumber)+" "+"detected");
+					//System.out.println(String.valueOf(iterationNumber)+" "+"detected");
 					cloneDetected = true;
 				}
 			}

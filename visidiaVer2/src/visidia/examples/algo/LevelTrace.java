@@ -144,13 +144,8 @@ public class LevelTrace implements Serializable {
 	public String show(Integer iterationNumber, Boolean cloneDetected) {
 		String s="";
 		s+=this.toString(iterationNumber, cloneDetected);
-		System.out.println(s);
+		//System.out.println(s);
 		return s;
-				
-	
-		
-		
-
 	}
 
 	//@Override

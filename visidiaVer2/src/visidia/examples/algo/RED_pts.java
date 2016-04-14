@@ -121,6 +121,7 @@ public class RED_pts extends Routing {
 		if (this.iterationNumber/100 + startId == this.getId() || this.getId() == cloneA) {
 			if(this.iterationNumber/100 + startId == this.getId() ){
 				posA=this.vertex.getPos();
+				
 			}
 			if(this.getId() == cloneA){	
 				posCloneA=new Point(this.vertex.getPos());
@@ -192,7 +193,7 @@ public class RED_pts extends Routing {
 			this.putProperty("label", new String("L"));
 			synchronized (cloneDetected) {
 				if (!cloneDetected) {
-					System.out.println(String.valueOf(iterationNumber) + " " + "detected");
+					//System.out.println(String.valueOf(iterationNumber) + " " + "detected");
 					cloneDetected = true;
 				}
 				//else System.out.println(String.valueOf(iterationNumber) + " " + "NotDetected");
