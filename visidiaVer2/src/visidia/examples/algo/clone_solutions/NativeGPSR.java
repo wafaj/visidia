@@ -439,7 +439,13 @@ public class NativeGPSR extends SynchronousAlgorithm {
 		long x = 0 ,y = 0;
 		Pattern pattern = Pattern.compile ("\\d+");
 		String target = m.toString();
+		
+		
+		
 		Matcher matcher = pattern.matcher (target);
+		
+		
+		
 		if(matcher.find())
 			x=Integer.parseInt(matcher.group());		
 		if(matcher.find())
