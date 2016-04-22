@@ -27,8 +27,8 @@ import java.util.Enumeration;
 
 public class Routing extends SynchronousAlgorithm {
 
-	protected Point posA;
-	protected Point posCloneA;
+	protected static Point posA;
+	protected static Point posCloneA;
 	public static final Double INF = new Double(1 << 20);
 	protected static Double xMax = new Double(-INF);
 	protected static Double yMax = new Double(-INF);
@@ -43,10 +43,21 @@ public class Routing extends SynchronousAlgorithm {
 	protected double xPos;
 	protected double yPos;
 	private Point pos;
+	
 	protected Vector<Point> neighborLocs;
 
 	protected WitnessCache cache;
 	protected Vector<SensorMessage> claims;
+	
+	protected static final Integer TOTAL_ITERATIONS_BY_CONFIGURATION = new Integer(500);
+
+	protected static int [] idsCloneA=initTab(0,11);
+	protected static int [] idsA=initTab(12,40);
+	protected static int  currentIdCloneA=0;
+	protected static int  currentIdA=0;
+	
+	
+	
 
 	protected static LevelTrace levelTrace = new LevelTrace();
 
@@ -71,6 +82,15 @@ public class Routing extends SynchronousAlgorithm {
 	@Override
 	public Object clone() {
 		return new Routing();
+	}
+
+	private static int[] initTab(int first, int last) {
+		if(last<first) return idsA;
+		int[] tab= new int[(last-first)+1];		 
+		for (int i =0 ; i <= (last-first); i++) {
+			tab[i]=i+first;
+		}
+		return tab;
 	}
 
 	private static String realTimeDirectoryName() {
@@ -195,6 +215,47 @@ public class Routing extends SynchronousAlgorithm {
 		else if (angle < 0)
 			angle *= -1;
 		return angle;
+	}
+	
+	
+	protected boolean isAn_A() {
+		if(this.getId()==getA_id()){
+			currentIdA=this.getId();
+			;//System.out.println(this.getId()+"is a A"+((iterationNumber/TOTAL_ITERATIONS_BY_CONFIGURATION)-1));
+		}
+			
+		return(this.getId()==getA_id());
+	}
+	
+	private int getA_id() {
+		int configId=(iterationNumber/TOTAL_ITERATIONS_BY_CONFIGURATION)-1;
+		//if(this.getId()==1)
+		//System.out.println(configNb+" "+idsA.length);
+		int index=0;//((configNb*configNb)-(configNb*idsA.length))/idsA.length;
+		index=(iterationNumber/TOTAL_ITERATIONS_BY_CONFIGURATION)-(getCloneA_id()*idsA.length);//-configId;//-(configId*idsA.length);
+	
+			return index-1 ;//idsA[];//;
+		
+		
+		//return (iterationNumber%(TOTAL_ITERATIONS_BY_CONFIGURATION*idsCloneA.length));
+	}
+
+	protected boolean isAn_cloneA( ) {
+		if(this.getId()==getCloneA_id())
+			currentIdCloneA=this.getId();
+			;//System.out.println(this.getId()+"is a cloneA");
+		return(this.getId()==getCloneA_id());
+	}
+
+	private int getCloneA_id( ) {
+	//int configNb=iterationNumber/(TOTAL_ITERATIONS_BY_CONFIGURATION*idsA.length);
+	
+	
+	//return (configNb/idsA.length);		
+	return iterationNumber/(TOTAL_ITERATIONS_BY_CONFIGURATION*idsA.length);//dsCloneA[];//%idsCloneA.length];
+		//return idsCloneA[iterationNumber/(TOTAL_ITERATIONS_BY_CONFIGURATION*idsCloneA.length)];
+		//return (iterationNumber%TOTAL_ITERATIONS_BY_CONFIGURATION);
+//		return 0;
 	}
 
 	private double angleVector(Point o, Point m) throws NullVectorExceotion {
@@ -457,12 +518,10 @@ public class Routing extends SynchronousAlgorithm {
 		this.claims = claims;
 	}
 
-	protected void statisticsProc(Integer iterationNumber, Boolean cloneDetected, int idA, int idCloneA, Point posA,
-			Point posCloneA) {
-		// System.out.println( "statisticsProc"+iterationNumber+" "+
-		// cloneDetected+" "+ idA+" "+idCloneA+" "+posA+" "+posCloneA);
+	protected void statisticsProc(Integer iterationNumber, Boolean cloneDetected,  Point posA,Point posCloneA) {
+		 //System.out.println( "statisticsProc"+iterationNumber+" "+		 cloneDetected+" "+ idA+" "+idCloneA+" "+posA+" "+posCloneA);
 		synchronized (levelTrace) {
-			levelTrace.update(this, idA, idCloneA, posA, posCloneA);
+			levelTrace.update(this, this.currentIdA, this.currentIdCloneA, posA, posCloneA);
 		}
 		this.nextPulse();
 
@@ -470,15 +529,6 @@ public class Routing extends SynchronousAlgorithm {
 			String s = levelTrace.show(iterationNumber, cloneDetected);
 			//System.out.println(s);
 			saveTrace(s);
-
-
-			
-			try {
-				Thread.sleep(0);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			this.nextPulse();
 			// levelTrace.saveToFile(true);
 			levelTrace.initialize();

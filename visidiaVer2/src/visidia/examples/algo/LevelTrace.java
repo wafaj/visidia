@@ -13,7 +13,7 @@ public class LevelTrace implements Serializable {
 	private static final long serialVersionUID = -3347678714052055389L;
 	private long nb_WinessCacheMax;
 	private long nb_WinessCache;
-	private long nb_calimsMax;
+	private long nb_claimsMax;
 	private long nb_claims;
 	private long Nb_Messages;
 	private Point posA;
@@ -74,12 +74,15 @@ public class LevelTrace implements Serializable {
 	public LevelTrace(LevelTrace copy) {
 		nb_WinessCacheMax = copy.nb_WinessCacheMax;
 		nb_WinessCache = copy.nb_WinessCache;
-		nb_calimsMax = copy.nb_calimsMax;
+		nb_claimsMax = copy.nb_claimsMax;
 		nb_claims = copy.nb_claims;
 		Nb_Messages = copy.Nb_Messages;	
 		this.idA=copy.idA;
 		this.idCloneA=copy.idCloneA;
+		if(copy!=null)
 		this.posA=new Point(copy.getPosA());
+		else System.out.println("cpunull");
+		
 		this.posCloneA=new Point(copy.getPosCloneA());
 	}
 
@@ -98,12 +101,12 @@ public class LevelTrace implements Serializable {
 		this.nb_WinessCache = nb_WinessCache;
 	}
 
-	public long getNb_calimsMax() {
-		return nb_calimsMax;
+	public long getNb_claimsMax() {
+		return nb_claimsMax;
 	}
 
-	public void setNb_calimsMax(long nb_calimsMax) {
-		this.nb_calimsMax = nb_calimsMax;
+	public void setNb_claimsMax(long nb_claimsMax) {
+		this.nb_claimsMax = nb_claimsMax;
 	}
 
 	public long getNb_claims() {
@@ -128,10 +131,10 @@ public class LevelTrace implements Serializable {
 
 	public void update(Routing r, int idA, int idCloneA, Point posA, Point posCloneA) {
 		//System.out.println("update"+idA+" "+idCloneA+" "+ posA+" "+ posCloneA);
-		this.setNb_calimsMax(Math.max(this.getNb_calimsMax(), r.getClaims().size()));
+		this.setNb_claimsMax(Math.max(this.getNb_claimsMax(), r.getClaims().size()));
 		this.setNb_claims(this.getNb_claims() + r.getClaims().size());
 		this.setNb_WinessCache(this.getNb_WinessCache() + r.getCache().size());
-		this.setNb_WinessCacheMax(Math.max(this.getNb_calimsMax(), r.getCache().size()));
+		this.setNb_WinessCacheMax(Math.max(this.getNb_claimsMax(), r.getCache().size()));
 		this.idA=idA;
 		this.idCloneA=idCloneA;
 		this.setPosA(posA);
@@ -151,7 +154,7 @@ public class LevelTrace implements Serializable {
 	//@Override
 	public String toString1() {
 		return "LevelTrace [nb_WinessCacheMax=" + nb_WinessCacheMax + ", nb_WinessCache=" + nb_WinessCache
-				+ ", nb_calimsMax=" + nb_calimsMax + ", nb_claims=" + nb_claims + ", Nb_Messages=" + Nb_Messages + "]";
+				+ ", nb_claimsMax=" + nb_claimsMax + ", nb_claims=" + nb_claims + ", Nb_Messages=" + Nb_Messages + "]";
 	}
 
 	public String toString(Integer iterationNumber, Boolean cloneDetected) {
@@ -164,10 +167,20 @@ public class LevelTrace implements Serializable {
 			s+=" notDtected ";
 			//System.out.print(String.valueOf(iterationNumber) + " " + "noDetected    ");
 
+		s+="idA=";
 		s+=idA+" ";
+		s+="idCloneA=";
 		s+=idCloneA+" ";
+
+		s+=" posA=";
+		s+="("+(int)posA.getX()+", "+(int)posA.getY()+") ";
+		s+=" posCloneA=";
+		s+="("+(int)posCloneA.getX()+", "+(int)posCloneA.getY()+") ";
+
+
+		
 		s+="nb_WinessCacheMax=" + nb_WinessCacheMax + " nb_WinessCache=" + nb_WinessCache
-				+ ", nb_calimsMax=" + nb_calimsMax + ", nb_claims=" + nb_claims + " Nb_Messages=" + Nb_Messages;
+				+ ", nb_claimsMax=" + nb_claimsMax + ", nb_claims=" + nb_claims + " Nb_Messages=" + Nb_Messages;
 		return s;
 		//s+=+" ";
 		
@@ -216,7 +229,7 @@ public class LevelTrace implements Serializable {
 	public void initialize() {
 		nb_WinessCacheMax = 0;
 		nb_WinessCache = 0;
-		nb_calimsMax = 0;
+		nb_claimsMax = 0;
 		nb_claims = 0;
 		Nb_Messages = 0;
 	}

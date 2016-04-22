@@ -97,8 +97,8 @@ public class LSM_pts extends Routing{
 
 
                 // the 4 following lines for the version of LSM with points evluation
-		if(this.iterationNumber/100 + startId == this.getId() || this.getId() == cloneA){
-			if(this.iterationNumber/100 + startId == this.getId() ){
+		/*if(this.iterationNumber/TOTAL_ITERATIONS_BY_CONFIGURATION + startId == this.getId() || this.getId() == cloneA){
+			if(this.iterationNumber/TOTAL_ITERATIONS_BY_CONFIGURATION + startId == this.getId() ){
 				posA=this.vertex.getPos();
 			}
 			if(this.getId() == cloneA){	
@@ -108,6 +108,26 @@ public class LSM_pts extends Routing{
 			this.putProperty("label", new String("P"));
 		}else{
 			this.putProperty("label", new String("N"));
+		}
+*/
+		if(isAn_A()){
+			posA = this.vertex.getPos();
+		
+			this.putProperty("label", new String("P"));
+			
+		}else{
+			this.putProperty("label", new String("N"));
+			
+		}
+		
+		if (isAn_cloneA()){
+			posCloneA = new Point(this.vertex.getPos());
+			this.putProperty("label", new String("P"));
+			
+		}
+		else{
+			this.putProperty("label", new String("N"));
+			
 		}
 
 		// Step -1
@@ -165,7 +185,7 @@ public class LSM_pts extends Routing{
 			}
 		}
 		this.nextPulse();
-		statisticsProc(iterationNumber,cloneDetected,this.iterationNumber/100 + startId ,(int)cloneA,posA,posCloneA);
+		statisticsProc(iterationNumber, cloneDetected, posA,	posCloneA);
 
 	}
 }

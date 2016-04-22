@@ -23,6 +23,7 @@ public class RED_pts extends Routing {
 	private boolean isMalacious;
 
 	public static final int NoWitnessPoints = 1;
+
 	private static Boolean receiving = true;
 	private static Vector<Point> WitnessPoints = new Vector<Point>();
 	private static Boolean cloneDetected = new Boolean(false);
@@ -118,8 +119,8 @@ public class RED_pts extends Routing {
 	@Override
 	public void init() {
 		// the 4 following lines for the version of RED with points evluation
-		if (this.iterationNumber/100 + startId == this.getId() || this.getId() == cloneA) {
-			if(this.iterationNumber/100 + startId == this.getId() ){
+		/*if (this.iterationNumber/TOTAL_ITERATIONS_BY_CONFIGURATION + startId == this.getId() || this.getId() == cloneA) {
+			if(this.iterationNumber/TOTAL_ITERATIONS_BY_CONFIGURATION + startId == this.getId() ){
 				posA=this.vertex.getPos();
 				
 			}
@@ -130,7 +131,27 @@ public class RED_pts extends Routing {
 			this.putProperty("label", new String("P"));
 		} else {
 			this.putProperty("label", new String("N"));
+		}*/
+		if(isAn_A()){
+			posA = this.vertex.getPos();
+		
+			this.putProperty("label", new String("P"));
+			
+		}else{
+			this.putProperty("label", new String("N"));
+			
 		}
+		
+		if (isAn_cloneA()){
+			posCloneA = new Point(this.vertex.getPos());
+			this.putProperty("label", new String("P"));
+			
+		}
+		else{
+			this.putProperty("label", new String("N"));
+			
+		}
+
 
 		// Step -1
 		this.cache = new WitnessCache();
@@ -228,7 +249,7 @@ public class RED_pts extends Routing {
 		
 	
 		//System.out.println(String.valueOf(iterationNumber) + " " + "detected");
-		statisticsProc(iterationNumber,cloneDetected,this.iterationNumber/100 + startId ,(int)cloneA,posA,posCloneA);
+		statisticsProc(iterationNumber, cloneDetected, posA,	posCloneA);
 
 	}
 
