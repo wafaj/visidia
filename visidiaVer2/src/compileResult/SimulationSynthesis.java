@@ -151,7 +151,7 @@ public class SimulationSynthesis implements Comparable{
 		totalNbMessageSent+=extractIntFromStringAtPos(ligne,8);
 		totalMemorySize+=wc+c ;
 		this.averageMemorySize=(wc+c)/this.getLineNB();
-		this.averageNbMessageSent=this.getTotalMemorySize();
+		this.averageNbMessageSent=this.getTotalNbMessageSent()/this.getLineNB();
 		
 
 		
@@ -179,24 +179,35 @@ public class SimulationSynthesis implements Comparable{
 
 	@Override
 	public String toString() {
-		DecimalFormat formatter = new DecimalFormat("#.######", DecimalFormatSymbols.getInstance( Locale.ENGLISH ));
-		formatter.setRoundingMode( RoundingMode.DOWN );
-		double d = detectRate;
-		String s = formatter.format(d);
+
+		DecimalFormat formatter = new DecimalFormat();
+		formatter.setMinimumFractionDigits(20);
+		formatter.setDecimalSeparatorAlwaysShown(true);
+
+		DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+		symbols.setDecimalSeparator('.');
+		//symbols.setGroupingSeparator('*');
+		formatter.setDecimalFormatSymbols(symbols);
+
 		//if(detectionNb>0)
-		return "("+idCloneA+","+idA+") :"+"SimulationSynthesis "
-				+ "[idA=" + idA 
-				+ ", idCloneA=" + idCloneA 
-				+ ", detectRate=" + detectRate
-				+ ", averageMemorySize=" + averageMemorySize
-				+ ", maxMemorySize=" + maxMemorySize
-				+ ", averageNbMessageSent=" + averageNbMessageSent 
-				+ ", detectionNb=" + detectionNb 
-				+ ", lineNB="+ lineNB 
-				+ ", totalNbMessageSent=" + totalNbMessageSent 
-				+ ", totalMemorySize=" + totalMemorySize 
+		//return "("+idCloneA+","+idA+") :"+"SimulationSynthesis "
+		return ""	+ "[idA=" + idA 
+				+ " idCloneA=" + idCloneA 
+				+ " posA=(" +(int)posA.getX()+" "+(int)posA.getY()+")"
+				+ " posCloneA=(" +(int)posCloneA.getX()+" "+(int)posCloneA.getY()+")"
+				
+				+ " detectRate=" + formatter.format(detectRate)
+				+ " averageMemorySize=" +averageMemorySize
+				+ " maxMemorySize=" + maxMemorySize
+				+ " averageNbMessageSent=" +averageNbMessageSent//formatter.format( averageNbMessageSent )
+				+ " detectionNb=" + detectionNb 
+				+ " lineNB="+ lineNB 
+				+ " totalNbMessageSent=" + totalNbMessageSent 
+				+ " totalMemorySize=" + totalMemorySize 
 				+ "]"
-				+s;
+				+detectRate*10000
+				
+				;
 		//return "";
 	}
 
@@ -266,9 +277,9 @@ public class SimulationSynthesis implements Comparable{
 			
 		//}
 			
-		this.averageMemorySize =totalMemorySize/lineNB ;
-		this.averageNbMessageSent = averageNbMessageSent/lineNB;
-		this.detectRate = this.detectionNb/lineNB;
+		this.averageMemorySize =(double)totalMemorySize/lineNB ;
+		this.averageNbMessageSent = (double)totalNbMessageSent/lineNB;
+		this.detectRate = (double) this.detectionNb/lineNB;
 		//System.out.println(this);
 		
 		

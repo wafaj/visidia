@@ -2,9 +2,11 @@ package compileResult;
 
 import java.awt.Point;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,9 +15,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 public class Main {
 	private static final String RESULT_FILES_FOLDER = "./traceSquareAllsAlgosResult/";
-	private static final String COMPILED_RESULT_FILES_FOLDER = "./traceSquareAllsAlgosResult_compiled";
+	public static final String COMPILED_RESULT_FILES_FOLDER = "./traceSquareAllsAlgosResult_compiled/";
+	
 
 	public static void main(String[] args) {
+		deleteDirectory(COMPILED_RESULT_FILES_FOLDER);
 		File f = new File(RESULT_FILES_FOLDER);
 		ArrayList<String> listFichiers= 		getFilesList(f);
 		ArrayList<String> listAlgo =getListAlgo();
@@ -55,27 +59,26 @@ public class Main {
 				fixStatSynthesis(currentAlgoCurrentSizeFilesList);
 			}
 		}
-			/*	for (Iterator iterator = listAlgo.iterator(); iterator.hasNext();) {
-			String currentAlgo=(String) iterator.next();
-			for (Iterator iterator2 = listSize.iterator(); iterator2.hasNext();) {
-				Integer currentSize = (Integer) iterator2.next();
-				ArrayList<String> tempFilesList= getTempList(currentAlgo , currentSize,listFichiers);
-				System.out.println("Traitement de fichiers suivants en cours ... ");
-				for (Iterator iterator3 = tempFilesList.iterator(); iterator3.hasNext();) {
-					String tempfile = (String) iterator3.next();
-					System.out.println(tempfile);
-				}
-				
-				System.out.println("");
-			}
-			
-		}*/
-		
-
 	}
 
+	static void deleteDirectory(String emplacement) {
+		
+			 
+			File path = new File(emplacement);
+		    if( path.exists() ) {
+		      File[] files = path.listFiles();
+		      for(int i=0; i<files.length; i++) {
+		       
+		           files[i].delete();
+		         
+		      }
+		    }
+		    //path.delete();
+		  }
+		
+	
+
 	private static void fixStatSynthesisShow(ArrayList<String> FilesList) {
-		System.out.println("#######");
 		for (Iterator iterator = FilesList.iterator(); iterator.hasNext();) {
 			String string = (String) iterator.next();
 			
@@ -83,10 +86,17 @@ public class Main {
 		}
 	}
 
-	private static void fixStatSynthesis(ArrayList<String> FilesList) {
-		fixStatSynthesisShow(FilesList);
+	private static void fixStatSynthesis(ArrayList<String> filesList) {
+		fixStatSynthesisShow(filesList);
+		String synthesisFileName= null;
+		if(filesList.size()>0){
+			synthesisFileName=filesList.get(0).substring(0, filesList.get(0).length() - 6);
+			synthesisFileName+=".txt";
+		}
+
+		
 		ListSimulationSynthesis lsitSimSynthese =new ListSimulationSynthesis();
-		for (Iterator iterator = FilesList.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = filesList.iterator(); iterator.hasNext();) {
 			String currentFile = (String) iterator.next();
 			BufferedReader currentBufferReader;
 			try {
@@ -111,57 +121,13 @@ public class Main {
 			
 			
 		}
+		System.out.println();
 		lsitSimSynthese.show();
+		lsitSimSynthese.save(COMPILED_RESULT_FILES_FOLDER+synthesisFileName);
 		
-		//ArrayList<SimulationSynthesis> lsitSimSynthese =new ArrayList<SimulationSynthesis>();
-		for (int i = 0; i < 9; i++) {
-			;//lsitSimSynthese.add(new SimulationSynthesis(0,i+1) );	
-		}
-		
-		int nbline=0;
-/**
- * 		for (Iterator iterator = tempFilesList.iterator(); iterator.hasNext();) {
-			String current = (String) iterator.next();
-			//ouvrir et lire ligne par ligne le ficier 
-			try {
-				BufferedReader fichier  = new BufferedReader(new FileReader("./traceSquareAllsAlgosResult/"+current));
-				String ligne;
-				try {
-					while ((ligne = fichier.readLine()) != null) {
-						int indexLine=indexSim(ligne);
-						lsitSimSynthese.get(indexLine).update(ligne);
-						
-					    // System.out.println(" 119 detected "+indexLine);					 
-					     //System.out.println(ligne);
-					     
-					     nbline++;
-					  }
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 
-			      try {
-					fichier.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}	
-		}
- */
 		
-		/*
-		for (Iterator iterator = lsitSimSynthese.iterator(); iterator.hasNext();) {
-			SimulationSynthesis simulationSynthesis = (SimulationSynthesis) iterator.next();
-			System.out.println(simulationSynthesis);
-			
-		}*/
-		
-		System.out.println(nbline);
+
 	}
 
 	private static int indexSim(String ligne) {
@@ -211,34 +177,15 @@ public class Main {
 		ArrayList<String> listFichiers=new ArrayList<String>();
 		int sizeG=0;
 		int versionG=0;
-		
-		//StatObj
-		
-		//System.out.println("size of integer in java  = "+ Integer.SIZE);
-		
-		
-//		System.out.println("sizeG"+sizeG+"versionG"+versionG);
-
 		int i;
 		tableauFichiers = f.list();
 		for (int j = 0; j < tableauFichiers.length; j++) {
 			listFichiers.add(tableauFichiers[j]);
 			
 		}
-		for (int j = 0; j < listFichiers.size(); j++) {
-	;//		System.out.println(listFichiers.get(j));
-			
-		}
-		Collections.sort(listFichiers);
-		System.out.println("");
-		for (int j = 0; j < listFichiers.size(); j++) {
-			;//System.out.println(listFichiers.get(j));
-			
-		}
-
 		
-		//Collections.sort(listefichiers);
-		//Collections.sort(listefichiers);	
+		Collections.sort(listFichiers);
+		
 		for (i = 0; i < tableauFichiers.length; i++) {
 			String current = tableauFichiers[i];
 			sizeG=extractIntFromStringAtPos(current,1);
@@ -274,7 +221,7 @@ public class Main {
 
 	}
 
-	private static int extractIntFromStringAtPos(String line, int n) {
+	static int extractIntFromStringAtPos(String line, int n) {
 		Pattern pattern = Pattern.compile ("\\d+");
 		String target = line.toString();
 		Matcher matcher = pattern.matcher (target);
@@ -290,16 +237,25 @@ public class Main {
 		return currentInt;
 
 	}
+	static float extractFloatFromStringAtPos(String line, int n) {
+		Pattern pattern = Pattern.compile("[0-9]*\\.?[0-9]+");
+		//Pattern pattern = Pattern.compile ("\\d+");
+		String target = line.toString();
+		Matcher matcher = pattern.matcher (target);
+		
+		float currentFloat=0;
+		for (int j = 0; j < n; j++) {
+			if(matcher.find())
+				currentFloat =Float.parseFloat(matcher.group());
+			else
+				return 0;
+			
+		}
+		return currentFloat;
 
-	private static int getVersionG(String line) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
-	private static int getSizeG(String line) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	
 
 	private static void update(int sizeG, int versionG, String line) {
 		
@@ -313,6 +269,30 @@ public class Main {
 			versionG=(int)Integer.parseInt(matcher.group());
 
 
+		
+	}
+
+	
+
+	public static void saveLine(String line, String fileURL) {
+		BufferedWriter out = null;
+		try {
+			out = new BufferedWriter(new FileWriter(new File(fileURL), true));
+			// out = new BufferedWriter(new FileWriter(new
+			// File(this.getClass().getName()+this.getNetSize()+".txt"),true));
+			out.write(line + "\n");
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				out.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 	}
 
