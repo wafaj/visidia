@@ -1,19 +1,60 @@
 package compileResult;
 
+import java.awt.Point;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SimulationSynthesis {
+public class SimulationSynthesis implements Comparable{
 	private int idA;
 	private int idCloneA;
-	private double detectRate;
-	private double averageMemorySize;
-	private double maxMemorySize;
+	private Point posA;
+	private Point posCloneA;
+	
+
 	private double averageNbMessageSent;
 	private long detectionNb;
 	private long lineNB;
-	private int totalNbMessageSent;
-	public int getTotalNbMessageSent() {
+	private long totalNbMessageSent;	
+	
+	private double detectRate;
+	private double averageMemorySize;
+	private double maxMemorySize;
+	private double totalMemorySize;
+		public SimulationSynthesis(String line) {
+		//8  notDtected idA=8 idCloneA=0  posCloneA=(50,50)  posA=(100, 100) 
+		//nb_WinessCacheMax=0 nb_WinessCache=14 nb_claimsMax=0 nb_claims=0 Nb_Messages=14
+		//totalMemory=476 maxMemory=34
+		super();
+		this.idA = this.extractIntFromStringAtPos(line, 2);
+		this.idCloneA = this.extractIntFromStringAtPos(line, 3);
+		this.posA=new Point(this.extractIntFromStringAtPos(line, 4),this.extractIntFromStringAtPos(line, 5));
+		this.posCloneA=new Point(this.extractIntFromStringAtPos(line, 6),this.extractIntFromStringAtPos(line,7));
+		
+		this.totalNbMessageSent = this.extractIntFromStringAtPos(line, 12);		
+		this.totalMemorySize = this.extractIntFromStringAtPos(line, 13);
+		this.maxMemorySize =  this.extractIntFromStringAtPos(line, 14);
+		
+		if(line.contains("notDtected")){
+			this.detectionNb = 0;
+		}
+		else if (line.contains("detected")){
+			for (int i = 0; i < 1000; i++) {
+				//System.out.print("#");
+				
+			}
+			this.detectionNb = 1;
+		}
+			
+		this.lineNB = 1;
+		this.averageMemorySize =totalMemorySize/lineNB ;
+		this.averageNbMessageSent = averageNbMessageSent/lineNB;
+		this.detectRate = this.detectionNb/lineNB;
+	}
+	public double getTotalNbMessageSent() {
 		return totalNbMessageSent;
 	}
 
@@ -21,7 +62,7 @@ public class SimulationSynthesis {
 		this.totalNbMessageSent = totalNbMessageSent;
 	}
 
-	public int getTotalMemorySize() {
+	public double getTotalMemorySize() {
 		return totalMemorySize;
 	}
 
@@ -29,7 +70,7 @@ public class SimulationSynthesis {
 		this.totalMemorySize = totalMemorySize;
 	}
 
-	private int totalMemorySize;
+	
 	
 	public long getDetectionNb() {
 		return detectionNb;
@@ -52,6 +93,8 @@ public class SimulationSynthesis {
 		this.idA = idA;
 		this.idCloneA = idCloneA;
 	}
+
+
 
 	public double getDetectRate() {
 		return detectRate;
@@ -125,7 +168,7 @@ public class SimulationSynthesis {
 		if(matcher.find())
 			currentInt =(int)Integer.parseInt(matcher.group());
 		else
-			return 0;
+			return -1;
 		
 	}
 	return currentInt;
@@ -136,10 +179,25 @@ public class SimulationSynthesis {
 
 	@Override
 	public String toString() {
-		return "SimulationSynthesis [idA=" + idA + ", idCloneA=" + idCloneA + ", detectRate=" + detectRate
-				+ ", averageMemorySize=" + averageMemorySize + ", maxMemorySize=" + maxMemorySize
-				+ ", averageNbMessageSent=" + averageNbMessageSent + ", detectionNb=" + detectionNb + ", lineNB="
-				+ lineNB + ", totalNbMessageSent=" + totalNbMessageSent + ", totalMemorySize=" + totalMemorySize + "]";
+		DecimalFormat formatter = new DecimalFormat("#.######", DecimalFormatSymbols.getInstance( Locale.ENGLISH ));
+		formatter.setRoundingMode( RoundingMode.DOWN );
+		double d = detectRate;
+		String s = formatter.format(d);
+		//if(detectionNb>0)
+		return "("+idCloneA+","+idA+") :"+"SimulationSynthesis "
+				+ "[idA=" + idA 
+				+ ", idCloneA=" + idCloneA 
+				+ ", detectRate=" + detectRate
+				+ ", averageMemorySize=" + averageMemorySize
+				+ ", maxMemorySize=" + maxMemorySize
+				+ ", averageNbMessageSent=" + averageNbMessageSent 
+				+ ", detectionNb=" + detectionNb 
+				+ ", lineNB="+ lineNB 
+				+ ", totalNbMessageSent=" + totalNbMessageSent 
+				+ ", totalMemorySize=" + totalMemorySize 
+				+ "]"
+				+s;
+		//return "";
 	}
 
 	private void incrementDetectionNb() {
@@ -149,6 +207,70 @@ public class SimulationSynthesis {
 
 	private void incrementLineNb() {
 		this.lineNB++;
+		
+	}
+
+	@Override
+	public int compareTo(Object ss) {
+		if(((SimulationSynthesis) ss).getIdA()==this.getIdA() 
+				&& ((SimulationSynthesis) ss).getIdCloneA()==this.getIdCloneA()){
+			//System.out.println((SimulationSynthesis)ss);
+			//System.out.println(this);
+			//System.out.println("");
+			
+			
+			return 0;
+		}
+		
+		else {
+			return 1;
+		}
+			
+	}
+
+	public void merge(SimulationSynthesis simulationSynthesis) {
+		//System.out.println("");
+		//System.out.println(this);
+		//System.out.println(simulationSynthesis);
+
+		//8  notDtected idA=8 idCloneA=0  posCloneA=(50,50)  posA=(100, 100) 
+		//nb_WinessCacheMax=0 nb_WinessCache=14 nb_claimsMax=0 nb_claims=0 Nb_Messages=14
+		//totalMemory=476 maxMemory=34
+		
+		//is.idA = 
+		//this.idCloneA = 
+		//this.posA=
+		//this.posCloneA=
+		
+		this.totalNbMessageSent +=simulationSynthesis.getTotalNbMessageSent();
+		this.totalMemorySize +=simulationSynthesis.getTotalMemorySize();//= this.extractIntFromStringAtPos(line, 13);
+		this.maxMemorySize =Math.max(simulationSynthesis.getMaxMemorySize(), this.getMaxMemorySize()); 
+		
+		this.detectionNb +=simulationSynthesis.getDetectionNb();
+		this.lineNB +=simulationSynthesis.getLineNB();
+		
+		
+		//if(simulationSynthesis.getDetectionNb()>0){
+			//System.out.println(simulationSynthesis);
+			//System.out.println(this);
+			
+			//System.out.println(this);
+			
+//		}	
+	//	if(simulationSynthesis.getLineNB()>0){
+		//	System.out.println(simulationSynthesis);
+			
+			//System.out.println(this);
+			
+			//System.out.println(this);
+			
+		//}
+			
+		this.averageMemorySize =totalMemorySize/lineNB ;
+		this.averageNbMessageSent = averageNbMessageSent/lineNB;
+		this.detectRate = this.detectionNb/lineNB;
+		//System.out.println(this);
+		
 		
 	}
 
