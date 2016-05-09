@@ -288,25 +288,22 @@ public class Routing extends SynchronousAlgorithm {
 	protected boolean forwardMessage(Point p, Message msg) {
 
 		Point lastNodePosition = ((SensorMessage) msg).getLastNodePosition();
-		int dest = this.getClosestDoor(p, lastNodePosition);
-		if (dest == -1)
-			return false;
-		else {
-			synchronized (levelTrace) {
-				this.levelTrace.incrementNbMessage(1);
-			}
-
-			boolean detectInfiniteLoops = ((SensorMessage) msg).detectInfiniteLoops();
-			if (detectInfiniteLoops) {
+		((SensorMessage) msg).addNumIntoPath(this.getId());
+		boolean detectInfiniteLoops = ((SensorMessage) msg).detectInfiniteLoops();
+		if (detectInfiniteLoops) {
 				return false;
 			} else {
-				((SensorMessage) msg).addNumIntoPath(this.getId());
+				int dest = this.getClosestDoor(p, lastNodePosition);
+				if (dest == -1)
+					return false;
+				else {
+					synchronized (levelTrace) {
+						this.levelTrace.incrementNbMessage(1);
+					}
+				}
 				this.sendTo(dest, new SensorMessage((SensorMessage) msg));
 				return true;
 			}
-
-		}
-
 	}
 
 	protected void checkInbox() {
