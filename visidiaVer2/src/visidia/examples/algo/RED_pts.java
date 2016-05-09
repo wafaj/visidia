@@ -132,21 +132,8 @@ public class RED_pts extends Routing {
 		} else {
 			this.putProperty("label", new String("N"));
 		}*/
-		if(isAn_A()){
-			posA = this.vertex.getPos();
-		
-			this.putProperty("label", new String("P"));
-			
-		}else if (isAn_cloneA()){
-			posCloneA = new Point(this.vertex.getPos());
-			this.putProperty("label", new String("P"));
-			
-		}
-		else{
-			this.putProperty("label", new String("N"));
-			
-		}
 
+setConfiguration();
 
 		// Step -1
 		this.cache = new WitnessCache();

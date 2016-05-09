@@ -196,6 +196,46 @@ public class Routing extends SynchronousAlgorithm {
 		}
 
 	}
+	
+	private void updateCurrentIdA() {
+		int index=(iterationNumber%TOTAL_ITERATIONS_BY_CONFIGURATION)/TOTAL_ITERATIONS_BY_CONFIGURATION;
+
+
+		currentIdA=idsA[index];
+	}
+
+	private void updateCurrentIdCloneA() {
+		int index=iterationNumber/(TOTAL_ITERATIONS_BY_CONFIGURATION*idsA.length);
+		currentIdCloneA=idsCloneA[index];
+
+	}
+	protected void setConfiguration(){
+		//System.out.println(this.getId()+" "+iterationNumber+" "+currentIdA+" "+currentIdCloneA);
+		
+		if(this.getId()==1){
+			updateCurrentIdCloneA();
+			updateCurrentIdA();
+			System.out.println(this.getId()+" "+iterationNumber+" "+currentIdA+" "+currentIdCloneA);
+			
+		}
+		nextPulse();
+		this.putProperty("label", new String("N"));
+		
+		if(this.getId()==currentIdCloneA){
+			posCloneA = new Point(this.vertex.getPos());
+			System.out.println("posCloneA"+posCloneA);
+			this.putProperty("label", new String("P"));
+		}
+		
+		if(this.getId()==currentIdA){
+			posA = new Point(this.vertex.getPos());
+			System.out.println("posA"+posA);
+			this.putProperty("label", new String("P"));
+		}
+		
+		nextPulse();
+		
+	}
 
 	/**
 	 * 

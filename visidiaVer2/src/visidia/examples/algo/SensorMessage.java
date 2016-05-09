@@ -46,7 +46,7 @@ public class SensorMessage extends Message {
 	}
 
 	public SensorMessage(String data, Point dest,Point locationClaim,MessageType type,Integer walkCounter) {
-		this.setType(type);
+		
 		this.data = new String(data);
 		this.dest = new Point(dest);
 		this.locationClaim = new Point(locationClaim);
@@ -55,6 +55,7 @@ public class SensorMessage extends Message {
 	}
 	
 	public SensorMessage(SensorMessage msg){
+		this.setType(msg.getType());
 		this.lastNodePosition=msg.lastNodePosition;
 		this.path=msg.path;
 		this.data = new String(msg.data);
@@ -100,15 +101,11 @@ public class SensorMessage extends Message {
 			////System.out.println("xxxx"+this.path.size());
 		}
 		else{
-			for (int i = pathLength-2; i >0 ; i--);
+			//for (int i = pathLength-2; i >0 ; i--);
 				////System.out.println("path.get("+i+")="+path.get(i));
-			for (int i = pathLength-2; i >0 ; i--) {
-				//////System.out.println(path.get(pathLength-1)+"  "+(path.get(i)));
-				if(path.get(pathLength-1).equals(path.get(i))){
-					//System.out.println(path.get(pathLength-1)+"=="+(path.get(i)));
-					//////System.out.println("compare "+path.get(pathLength-2)+"  "+(path.get(i-1)));
-					if(path.get(pathLength-2).equals(path.get(i-1))){
-						////System.out.println("	"+path.get(pathLength-2)+"=="+(path.get(i-1)));
+			for (int i = pathLength-2; i >0 ; i--) {//////System.out.println(path.get(pathLength-1)+"  "+(path.get(i)));
+				if(path.get(pathLength-1).equals(path.get(i))){//System.out.println(path.get(pathLength-1)+"=="+(path.get(i)));//////System.out.println("compare "+path.get(pathLength-2)+"  "+(path.get(i-1)));
+					if(path.get(pathLength-2).equals(path.get(i-1))){////System.out.println("	"+path.get(pathLength-2)+"=="+(path.get(i-1)));
 						return true;	
 					}
 					else{
@@ -129,7 +126,7 @@ public class SensorMessage extends Message {
 	}
 	@Override
 	public Object clone() {
-		return new SensorMessage(this.data,this.dest,this.locationClaim,this.getType(),this.walkCounter);
+		return new SensorMessage(this);//.data,this.dest,this.locationClaim,this.getType(),this.walkCounter);
 	}
 	@Override
 	public Object getData() {
@@ -159,20 +156,21 @@ public class SensorMessage extends Message {
 	}
 
 	public void addNumIntoPath(int id) {
-		Integer ii=new Integer(id);
+		Integer idObj=new Integer(id);
 		
-		if(path.add(ii)){
+		if(path.add(idObj)){
 			////System.out.println("addNumIntoPath "+ id);
 			
 		}else{
 			////System.out.println("addNumIntoPath "+ id+ "failure ");
 		}
 		String s="";
-		for (int i = 0; i < path.size(); i++) {
+		for (int i = 0; i <0/* path.size()*/; i++)
+		{
 			s+=path.get(i);
 			s+=" ";
 		}
-		//////System.out.println("path.size()"+path.size()+"   "+s);
+		//System.out.println("path.size()"+path.size()+"   "+s);
 
 		
 	}

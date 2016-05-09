@@ -11,15 +11,53 @@ public class LevelTrace implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -3347678714052055389L;
-	private long nb_WinessCacheMax;
+	private static final long sizeOfWitnessCacheObject=sizeOf("visidia.examples.algo.WitnessCache");
+	private static final long sizeOfClaimObject=sizeOf("visidia.examples.algo.WitnessCache");
+	
+	
+	private int idA;
+	private int idCloneA;	
+	private  long nb_claimsMax;
+	private long nb_WinessCacheMax;	
+	
 	private long nb_WinessCache;
-	private long nb_claimsMax;
 	private long nb_claims;
-	private long Nb_Messages;
+	private long nb_Messages;
+	
+	private long totalMemory;
+	private long maxMemory;
+
 	private Point posA;
 	private Point posCloneA;
+	
+	
+	
 	public int getIdA() {
 		return idA;
+	}
+
+
+	private static long sizeOf(String theClassName) {
+		if(theClassName.equals("visidia.examples.algo.WitnessCache"))
+			return 160;
+		else if (theClassName.equals("visidia.examples.algo.SensorMessage"))
+			return (24*3)+(4*2)+10;
+		return -1;
+		
+		/*long size=-1;
+		ObjectSizer sizer = new ObjectSizer();
+		 Class theClass = null;
+		    try {
+		      theClass = Class.forName(theClassName);
+		      size= sizer.getObjectSize(theClass);
+		      System.out.println("The size of a "+theClassName + " object is " + size);
+		      return size;
+		    }
+		    catch (Exception ex) {
+		    	System.out.println("Cannot build a Class object: " +theClassName);
+		    	System.out.println("Use a package-qualified name, and check classpath.");
+		    }
+		    return -1;*/
 	}
 
 
@@ -41,8 +79,27 @@ public class LevelTrace implements Serializable {
 
 
 
-	private int idA;
-	private int idCloneA;
+	public long getTotalMemory() {
+		return totalMemory;
+	}
+
+
+	public void setTotalMemory(long totalMemory) {
+		this.totalMemory = totalMemory;
+	}
+
+
+	public long getMaxMemory() {
+		return maxMemory;
+	}
+
+
+	public void setMaxMemory(long maxMemory) {
+		this.maxMemory = maxMemory;
+	}
+
+
+
 	
 	
 	
@@ -76,14 +133,13 @@ public class LevelTrace implements Serializable {
 		nb_WinessCache = copy.nb_WinessCache;
 		nb_claimsMax = copy.nb_claimsMax;
 		nb_claims = copy.nb_claims;
-		Nb_Messages = copy.Nb_Messages;	
+		nb_Messages = copy.nb_Messages;	
 		this.idA=copy.idA;
 		this.idCloneA=copy.idCloneA;
-		if(copy!=null)
 		this.posA=new Point(copy.getPosA());
-		else System.out.println("cpunull");
-		
-		this.posCloneA=new Point(copy.getPosCloneA());
+		this.totalMemory=copy.totalMemory;
+		this.maxMemory=copy.maxMemory;
+
 	}
 
 
@@ -139,6 +195,12 @@ public class LevelTrace implements Serializable {
 		this.idCloneA=idCloneA;
 		this.setPosA(posA);
 		this.setPosCloneA(posCloneA);
+		long currentMemorySize=r.claims.size()*sizeOf("visidia.examples.algo.SensorMessage")+r.getCache().size()*(10+24);
+		this.setTotalMemory(currentMemorySize+this.getTotalMemory());
+		this.setMaxMemory(
+				Math.max(this.getMaxMemory(),currentMemorySize));
+		
+		
 	
 
 
@@ -151,36 +213,28 @@ public class LevelTrace implements Serializable {
 		return s;
 	}
 
-	//@Override
-	public String toString1() {
-		return "LevelTrace [nb_WinessCacheMax=" + nb_WinessCacheMax + ", nb_WinessCache=" + nb_WinessCache
-				+ ", nb_claimsMax=" + nb_claimsMax + ", nb_claims=" + nb_claims + ", Nb_Messages=" + Nb_Messages + "]";
-	}
+
 
 	public String toString(Integer iterationNumber, Boolean cloneDetected) {
 		String s="";
 		s+=iterationNumber+" ";
-		if(cloneDetected)
-			s+=" detected ";
-			//System.out.print(String.valueOf(iterationNumber) + " " + "detected    ");
-		else
-			s+=" notDtected ";
-			//System.out.print(String.valueOf(iterationNumber) + " " + "noDetected    ");
-
-		s+="idA=";
-		s+=idA+" ";
-		s+="idCloneA=";
-		s+=idCloneA+" ";
-
-		s+=" posA=";
-		s+="("+(int)posA.getX()+", "+(int)posA.getY()+") ";
-		s+=" posCloneA=";
-		s+="("+(int)posCloneA.getX()+", "+(int)posCloneA.getY()+") ";
-
-
 		
+		if(cloneDetected)		s+=" detected ";
+		else					s+=" notDtected ";
+
+
+		s+="idA="+idA+" ";
+		s+="idCloneA="+idCloneA+" ";
+		
+		s+=" posCloneA=("+(int)posCloneA.getX()+","+(int)posCloneA.getY()+") ";
+		s+=" posA=("+(int)posA.getX()+", "+(int)posA.getY()+") ";
+				
 		s+="nb_WinessCacheMax=" + nb_WinessCacheMax + " nb_WinessCache=" + nb_WinessCache
-				+ ", nb_claimsMax=" + nb_claimsMax + ", nb_claims=" + nb_claims + " Nb_Messages=" + Nb_Messages;
+				+ " nb_claimsMax=" + nb_claimsMax + " nb_claims=" + nb_claims + " Nb_Messages=" + nb_Messages;
+		s+=" totalMemory="+totalMemory;
+		s+=" maxMemory="+maxMemory;
+		
+		
 		return s;
 		//s+=+" ";
 		
@@ -189,11 +243,11 @@ public class LevelTrace implements Serializable {
 
 
 	public long getNb_Messages() {
-		return Nb_Messages;
+		return nb_Messages;
 	}
 
 	public void setNb_Messages(long nb_Messages) {
-		Nb_Messages = nb_Messages;
+		nb_Messages = nb_Messages;
 	}
 
 	public void hello(int id) {
@@ -202,7 +256,7 @@ public class LevelTrace implements Serializable {
 	}
 
 	public void incrementNbMessage(int nbMessage) {
-		this.Nb_Messages += nbMessage;
+		this.nb_Messages += nbMessage;
 
 	}
 
@@ -231,7 +285,10 @@ public class LevelTrace implements Serializable {
 		nb_WinessCache = 0;
 		nb_claimsMax = 0;
 		nb_claims = 0;
-		Nb_Messages = 0;
+		nb_Messages = 0;
+		this.totalMemory=0;
+		this.maxMemory=0;
+		
 	}
 
 }
