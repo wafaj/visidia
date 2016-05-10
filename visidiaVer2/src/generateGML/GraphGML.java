@@ -8,7 +8,7 @@ import java.util.Collections;
 public class GraphGML {
 
 	private static final int VALEUR_MIN = 0;
-	private static final int VALEUR_MAX = 1000;
+	private static final int VALEUR_MAX = 500;
 	ArrayList<Node> nodes = new ArrayList<Node>();
 	ArrayList<Edge> edges = new ArrayList<Edge>();
 	private double maxValueEdges = 0;
@@ -24,8 +24,8 @@ public class GraphGML {
 	}
 
 	private void addEdges(int nbNodes, int averageNeighbor) {
-		//float seille[]={62,44,34,33,27,25,23,21,21,21,11,11,11,11,11,11,11,11}; //pour graph de 500x500
-		float seille[]={250,44,34,33,27,25,23,21,21,21,11,11,11,11,11,11,11,11}; //pour graph de 1000x1000
+		float seille[]={62,44,34,33,27,25,23,21,21,21,11,11,11,11,11,11,11,11}; //pour graph de 500x500
+		//float seille[]={250,44,34,33,27,25,23,21,21,21,11,11,11,11,11,11,11,11}; //pour graph de 1000x1000
 		
 		int nbEdgesMax = Math.min(nbEdgesClique(nbNodes), (int) (nbNodes * averageNeighbor) / 2);
 		System.out.println(nbNodes + " " + nbEdgesMax);
@@ -34,7 +34,7 @@ public class GraphGML {
 		for (int i = 0; i < nbNodes - 1; i++) {
 			for (int j = i; j < nbNodes; j++) {
 				currentEdge=new Edge(nodes.get(i), nodes.get(j));
-				if(currentEdge.getValue()<seille[(nbNodes/250)-1]){
+				if(currentEdge.getValue()<seille[(nbNodes/1000)-1]){
 					full = edges.size() >= nbEdgesMax;
 					maxValueEdges = Math.max(maxValueEdges,	currentEdge.getValue());
 					minValueEdges = Math.min(minValueEdges,currentEdge.getValue()	);
@@ -46,6 +46,7 @@ public class GraphGML {
 						if (edges.get(edges.size() - 1).getValue() > currentEdge.getValue()) {
 							Collections.sort(edges);
 							// System.out.println(edges.get(edges.size()-1).getValue()+">"+currentEdge.getValue());
+						
 							//System.out.println((edges.get(edges.size() - 1)).getValue());
 							edges.remove(edges.size() - 1);
 							edges.add(edges.size() - 1, currentEdge);

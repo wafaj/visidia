@@ -49,10 +49,17 @@ public class Routing extends SynchronousAlgorithm {
 	protected WitnessCache cache;
 	protected Vector<SensorMessage> claims;
 	
+	
 	protected static final Integer TOTAL_ITERATIONS_BY_CONFIGURATION = new Integer(500);
 
-	protected static int [] idsCloneA=initTab(0,11);
-	protected static int [] idsA=initTab(12,40);
+	protected static final int INITIAL_ID_A = 0;
+	protected static final int FINAL_ID_A = 7;	
+	protected static final int INITIAL_ID_CLONE_A = 8;
+	protected static final int FINAL_ID_CLONE_A =16;
+	
+
+	protected static int[] idsA = initTab(INITIAL_ID_A, FINAL_ID_A);
+	protected static int[] idsCloneA = initTab(INITIAL_ID_CLONE_A, FINAL_ID_CLONE_A);
 	protected static int  currentIdCloneA=0;
 	protected static int  currentIdA=0;
 	
@@ -198,14 +205,19 @@ public class Routing extends SynchronousAlgorithm {
 	}
 	
 	private void updateCurrentIdA() {
-		int index=(iterationNumber%TOTAL_ITERATIONS_BY_CONFIGURATION)/TOTAL_ITERATIONS_BY_CONFIGURATION;
+		int it_itByConfig=iterationNumber/TOTAL_ITERATIONS_BY_CONFIGURATION;
+		
+		int index=it_itByConfig/idsCloneA.length;//
+		//int index=(iterationNumber%TOTAL_ITERATIONS_BY_CONFIGURATION)/TOTAL_ITERATIONS_BY_CONFIGURATION;
 
 
 		currentIdA=idsA[index];
 	}
 
 	private void updateCurrentIdCloneA() {
-		int index=iterationNumber/(TOTAL_ITERATIONS_BY_CONFIGURATION*idsA.length);
+		int it_itByConfig=iterationNumber/TOTAL_ITERATIONS_BY_CONFIGURATION;
+		int index=it_itByConfig%(idsCloneA.length+0);//
+		//int index=iterationNumber/(TOTAL_ITERATIONS_BY_CONFIGURATION*idsA.length);
 		currentIdCloneA=idsCloneA[index];
 
 	}
@@ -223,13 +235,13 @@ public class Routing extends SynchronousAlgorithm {
 		
 		if(this.getId()==currentIdCloneA){
 			posCloneA = new Point(this.vertex.getPos());
-			System.out.println("posCloneA"+posCloneA);
+			//System.out.println("posCloneA"+posCloneA);
 			this.putProperty("label", new String("P"));
 		}
 		
 		if(this.getId()==currentIdA){
 			posA = new Point(this.vertex.getPos());
-			System.out.println("posA"+posA);
+			//System.out.println("posA"+posA);
 			this.putProperty("label", new String("P"));
 		}
 		

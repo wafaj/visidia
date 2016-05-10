@@ -281,6 +281,7 @@ public class LevelTrace implements Serializable {
 	
 
 	public void initialize() {
+		
 		nb_WinessCacheMax = 0;
 		nb_WinessCache = 0;
 		nb_claimsMax = 0;
