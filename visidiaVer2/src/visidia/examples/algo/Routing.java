@@ -257,7 +257,7 @@ public class Routing extends SynchronousAlgorithm {
 	 * @return
 	 * @throws NullVectorExceotion
 	 */
-	private Double angleBetweenTwoPointsWithFixedPoint(Point fixed, Point p1, Point p2) throws NullVectorExceotion {
+	private Double angleBetweenTwoPointsWithFixedPoint(Point fixed, Point p1, Point p2) throws NullVectorException {
 		double a1 = angleVector(fixed, p1);
 		double a2 = angleVector(fixed, p2);
 		Double angle = null;
@@ -310,7 +310,7 @@ public class Routing extends SynchronousAlgorithm {
 //		return 0;
 	}
 
-	private double angleVector(Point o, Point m) throws NullVectorExceotion {
+	private double angleVector(Point o, Point m) throws NullVectorException {
 
 		long x = (long) (m.getX() - o.getX());
 		long y = (long) (m.getY() - o.getY());
